@@ -1,0 +1,11 @@
+﻿Name,Value,Notes,formatString,diffName,diffNotes,compareG,compareL,compareS,diffFormat,diffTransform,textAdd,specialDisplay
+Testing Cost ($),max(tableData$testingCost), ,%0.0f,costs, ,more,less,0 change,%0f,function(a){abs(a)},$ in total testing cost,ShowBoth
+Total Quarantine Entries,totalStudentsEnteringQuarantine, ,%0.0f,students in quarantine, ,more,fewer,no change in,%0f,function(a){abs(a)},students placed in quarantine,ShowBoth
+Total Isolation Entries,totalStudentsEnteringIsolation, ,%0.0f,students in isolation, ,more,fewer,no change in,%0f,function(a){abs(a)},students placed in isolation,ShowBoth
+Total Students Symptomatic,totalStudentsSymptomatic, ,%0.0f,students symptomatic, ,more,fewer,no change in,%0f,function(a){abs(a)},students developing symptoms,ShowBoth
+Accurate Contact Traces,totalAccurateCTs, ,%0.0f,helpful contact traces, ,more,fewer,no change in,%0f,function(a){abs(a)},helpful contact traces,ShowBoth
+Peak Isolation Occupancy,max(tableData$bedsUsed), ,%0.0f,peak isolations,,more,fewer,no change in,%0f,function(a){abs(a)},students in isolation at peak,ShowBoth
+Total Isolation (100s Person-Days),sum(tableData$bedsUsed)/100/tableParameters$mechanicsParameters$cyclesPerDay, ,%0.0f,total isolation time (100s Person-Days), ,more,fewer,no change in,%0.2f,function(a){100*abs(a)},person-days spent in isolation,
+Total Symptomatic Time (Person-Days),sum(tableData$symptomatic)/tableParameters$mechanicsParameters$cyclesPerDay, ,%0.0f,total symptomatic time (person-days), ,more,fewer,no change in,%0.2f,function(a){abs(a)},person-days spent symptomatic,
+Average Isolation Time Per Student (days),sum(tableData$bedsUsed/tableData$population)/tableParameters$mechanicsParameters$cyclesPerDay, ,%0.2f,average isolation time (days), ,more,less,no change in,%0.2f,function(a){abs(a)},average days spent in isolation,
+Average Symptomatic Time Per Student (days),sum(tableData$symptomatic/tableData$population)/tableParameters$mechanicsParameters$cyclesPerDay, ,%0.2f,average symptomatic time (days), ,more,less,no change in,%0.2f,function(a){abs(a)},average days spent symptomatic,

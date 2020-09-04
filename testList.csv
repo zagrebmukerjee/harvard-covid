@@ -1,0 +1,2 @@
+TestName,scenario1,scenario2,diffName,explanatoryText,generateDiff,stitch,stitchFileName
+t1_party,1500Students_NoParty,,Effects of Allowing Weekly Parties, ,FALSE,FALSE,Party Test
