@@ -1,43 +1,51 @@
 library(shiny)
+library(shinyBS)
+library(shinycssloaders)
+library(shinydashboard)
+library(shinyjs)
+library(shinyWidgets)
+library(dashboardthemes)
+library(rintrojs)
+library(plotly)
 library(dplyr)
+library(DT)
 
-# Define UI for application that draws a histogram
-ui <- fluidPage(
-   # Application title
-   titlePanel("Old Faithful Geyser Data"),
+source("singleFunction.R")
+source("ui.R")
 
-   helpText(paste("Process Id", Sys.getpid())),
 
-   # Sidebar with a slider input for number of bins
-   sidebarLayout(
-      sidebarPanel(
-         sliderInput("bins",
-                     "Number of bins:",
-                     min = 1,
-                     max = 50,
-                     value = 30)
-      ),
-
-      # Show a plot of the generated distribution
-      mainPanel(
-         plotOutput("distPlot")
-      )
+server <- function(input, output){
+   
+   funList <- reactive({
+      campusSIRFunction(
+         r0 = input$r0,
+         testPCRSpecificity = input$spec,
+         testPCRSensitivity = input$sens,
+         testingTime = input$cad,
+         commInf = input$comm,
+         startingAsymptomatics = input$asymp, 
+         studentPopulation = input$pop,
+         conditionalInfectionProb = input$infectprob,
+         totalDays = input$days,
+         symptomDevelopmentProportion = input$devsymp,
+         testingCost = input$cost,
+         testConfCost = input$confcost,
+         falsePositiveReturnTime = input$reldays
+      )})
+   
+   output$plot <- renderPlotly(
+      funList()$chart
    )
-)
-
-# Define server logic required to draw a histogram
-server <- function(input, output, session) {
-   session$allowReconnect("force")
-   output$distPlot <- renderPlot({
-      # generate bins based on input$bins from ui.R
-      x    <- faithful[, 2]
-      bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-      # draw the histogram with the specified number of bins
-      hist(x, breaks = bins, col = 'darkgray', border = 'white')
-   })
+   
+   output$tabledata <- DT::renderDataTable({
+      DT::datatable(
+         funList()$table,
+         rownames = FALSE,
+         options = list(paging = FALSE, searching = FALSE),
+         class = 'order-column cell-border hover'
+      )})
+   
 }
 
-# Run the application
-shinyApp(ui = ui, server = server)
 
+shinyApp(ui = ui, server = server)
