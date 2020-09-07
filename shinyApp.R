@@ -33,17 +33,26 @@ server <- function(input, output){
       falsePositiveReturnTime = input$reldays
   )})
   
-  output$plot <- renderPlotly(
-    funList()$chart
-  )
+  # v <- reactiveValues(data = NULL)
+  # 
+  # observeEvent(input$reset, {
+  #   v$data <- NULL
+  # })
+  
+  output$plot <- renderPlotly({
+    # if (is.null(v$data)) return()
+    isolate(funList()$chart)
+  })
 
-  output$tabledata <- DT::renderDataTable({
+  output$tabledata <-
+    DT::renderDataTable({
     DT::datatable(
-      funList()$table,
-      rownames = FALSE,
-      options = list(paging = FALSE, searching = FALSE),
-      class = 'order-column cell-border hover'
+    funList()$table,
+    rownames = FALSE,
+    options = list(paging = FALSE, searching = FALSE),
+    class = 'order-column cell-border hover'
    )})
+  
 
 }
 
