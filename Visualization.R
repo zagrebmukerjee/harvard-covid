@@ -99,7 +99,7 @@ dashboardChartingFunction <- function(chartData, chartParameters, annotations = 
   yRangeOcc <-c(1.1*min(chartData$bedsUsed),
                 1.1*max(chartData$bedsUsed))
   
-  yaxisString <- paste0("Number of People (out of ", chartParameters$timeInvariantParameters$studentPopulation, ")")
+  yaxisString <- paste0("Number of People (out of ", chartParameters$timeInvariantParams$studentPopulation, ")")
   
   ########################
   trajectoryChart <- plot_ly(data = chartData, x = ~day, y = ~infected, name = "Infected (Symp + ASymp)", 

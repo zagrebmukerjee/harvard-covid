@@ -154,7 +154,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "sens", 
-        "Test sensitivity is equal to 1 - false positive rate.",
+        "Test sensitivity is equal to 1 - false negative rate.",
         placement = "bottom", 
         trigger = "hover"
       ),
@@ -168,7 +168,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "spec", 
-        "Test specificity is equal to 1 - false negative rate.",
+        "Test specificity is equal to 1 - false positive rate.",
         placement = "bottom", 
         trigger = "hover"
       ),
