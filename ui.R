@@ -2,7 +2,7 @@ dashboardLogo <- shinyDashboardLogoDIY(
   
   boldText = "COVID-19 Population Model"
   ,mainText = "by Harvard IQSS"
-  ,textSize = 18
+  ,textSize = 20
   ,badgeText = "v.1"
   ,badgeTextColor = "white"
   ,badgeTextSize = 2
@@ -118,11 +118,32 @@ ui <- dashboardPage(
   
   dashboardHeader(
     title = dashboardLogo,
-    titleWidth = 450
+    titleWidth = 500
   ),
   
   dashboardSidebar(
-  width = 300,
+  width = 350,
+  br(),
+  introBox(data.step = 3, data.intro = "Compute button",
+           div(style="display:inline-block",
+               submitButton("COMPUTE",
+                            icon("play-circle")
+               )
+               # bsButton(inputId = "compute",
+               #          label = "COMPUTE",
+               #          icon = icon("play-circle"),
+               #          style = "primary",
+               #          size = "large")
+           ),
+           div(style="display:inline-block",
+               bsButton(inputId = "reset", 
+                        label = "RESET", 
+                        icon = icon("refresh"), 
+                        style = "default",
+                        # size = "large"
+                        )
+           )
+          ),
   br(),
   sidebarMenu(
     menuItem(
@@ -296,17 +317,7 @@ ui <- dashboardPage(
         icon = icon("download"),
         style = "color: black; margin-left: 15px; margin-bottom: 5px;"
       )
-    ),
-    
-    br(),
-    submitButton(
-      "Compute",
-      icon("play-circle")
-    ),
-    actionButton(
-      "reset", 
-      "Reset Parameters",
-      icon("refresh"))
+    )
     
   )),
   
@@ -328,6 +339,7 @@ ui <- dashboardPage(
     id = 'dataset',
     tabPanel("Summary Results", DT::dataTableOutput("tabledata"))
   ),
-  # textOutput("This dashboard was made by Zagreb Mukerjee and Olivia Fu at the Harvard Institute of Quantitative Social Science. Updated September 2020.")
+  br(),
+  textOutput("description")
   
 ))

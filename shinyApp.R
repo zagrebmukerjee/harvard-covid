@@ -44,15 +44,18 @@ server <- function(input, output){
     isolate(funList()$chart)
   })
 
-  output$tabledata <-
-    DT::renderDataTable({
+  output$tabledata <- DT::renderDataTable({
     DT::datatable(
-    funList()$table,
-    rownames = FALSE,
-    options = list(paging = FALSE, searching = FALSE),
-    class = 'order-column cell-border hover'
-   )})
+      funList()$table,
+      rownames = FALSE,
+      options = list(paging = FALSE, searching = FALSE),
+      class = 'order-column cell-border hover'
+    )
+  })
   
+  output$description <- renderPrint({
+    "This dashboard was made by Zagreb Mukerjee and Olivia Fu at the Harvard Institute of Quantitative Social Science. Updated September 2020."
+  })
 
 }
 
