@@ -1,6 +1,6 @@
 dashboardLogo <- shinyDashboardLogoDIY(
   
-  boldText = "COVID-19 Population Model"
+  boldText = "Campus Covid-19 Model"
   ,mainText = "by Harvard IQSS"
   ,textSize = 20
   ,badgeText = "v.1"
@@ -161,7 +161,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "r0", 
-        "R0 describes how many new infections patient zero produces over the course of illness.",
+        "R0 describes how many new infections patient zero produces over the course of their illness.",
         placement = "bottom", 
         trigger = "hover"
       ),
@@ -217,7 +217,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "comm", 
-        "External infections are those coming from outside Harvard.",
+        "External infections are those coming from outside campus",
         placement = "bottom", 
         trigger = "hover"
       ),
@@ -230,7 +230,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "asymp", 
-        "This is the number of people arriving on campus carrying Covid without symptoms.",
+        "The number of people arriving on campus carrying Covid without symptoms",
         placement = "bottom", 
         trigger = "hover"
       )
@@ -247,6 +247,12 @@ ui <- dashboardPage(
         min = 0,
         max = 100000
       ),
+      bsTooltip(
+        "comm", 
+        "How many students are on campus",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
       sliderInput(
         inputId = "infectprob", 
         label = "Probability of Infection Given Contact",
@@ -255,6 +261,12 @@ ui <- dashboardPage(
         max = 10, 
         step = 0.5,
         post = "%"
+      ),
+      bsTooltip(
+        "comm", 
+        "The probability of infection given a 15-minute, unmasked, indoors contact between two people",
+        placement = "bottom", 
+        trigger = "hover"
       ),
       sliderInput(
         inputId = "days", 
@@ -265,6 +277,12 @@ ui <- dashboardPage(
         step = 10,
         post = " days"
       ),
+      bsTooltip(
+        "comm", 
+        "How many days to run the simulation",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
       sliderInput(
         inputId = "devsymp", 
         label = "Proportion Developing Symptoms",
@@ -274,14 +292,26 @@ ui <- dashboardPage(
         step = 5,
         post = "%"
       ),
+      bsTooltip(
+        "comm", 
+        "What proportion of those infected develop some degree of symptom",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
       sliderInput(
         inputId = "cost", 
-        label = "Testing Cost",
+        label = "Cost per Test",
         value = 25, 
         min = 0, 
         max = 100, 
         step = 5,
         pre = "$"
+      ),
+      bsTooltip(
+        "comm", 
+        "Cost of administering a PCR test",
+        placement = "bottom", 
+        trigger = "hover"
       ),
       sliderInput(
         inputId = "confcost", 
@@ -292,13 +322,25 @@ ui <- dashboardPage(
         step = 10,
         pre = "$"
       ),
+      bsTooltip(
+        "comm", 
+        "Cost of testing administered on entering isolation",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
       sliderInput(
         inputId = "reldays", 
-        label = "Days to Release False Positive from Quarantine",
+        label = "False Positive release time",
         value = 1, 
         min = 0, 
         max = 14,
         post = " days"
+      ),
+      bsTooltip(
+        "comm", 
+        "Days it takes to release a false positive from isolation",
+        placement = "bottom", 
+        trigger = "hover"
       )
     ),
     
