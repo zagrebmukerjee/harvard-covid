@@ -1,5 +1,5 @@
 ﻿Name,Value,Notes,formatString,diffName,diffNotes,compareG,compareL,compareS,diffFormat,diffTransform,textAdd,specialDisplay
-Testing Cost ($),max(tableData$testingCost), ,%0.0f,costs, ,more,less,0 change,%0f,function(a){abs(a)},$ in total testing cost,ShowBoth
+Testing Cost,max(tableData$testingCost), ,%0.0f,costs, ,more,less,0 change,%0f,function(a){abs(a)},$ in total testing cost,ShowBoth
 Total Quarantine Entries,totalStudentsEnteringQuarantine, ,%0.0f,students in quarantine, ,more,fewer,no change in,%0f,function(a){abs(a)},students placed in quarantine,ShowBoth
 Total Isolation Entries,totalStudentsEnteringIsolation, ,%0.0f,students in isolation, ,more,fewer,no change in,%0f,function(a){abs(a)},students placed in isolation,ShowBoth
 Total Students Symptomatic,totalStudentsSymptomatic, ,%0.0f,students symptomatic, ,more,fewer,no change in,%0f,function(a){abs(a)},students developing symptoms,ShowBoth

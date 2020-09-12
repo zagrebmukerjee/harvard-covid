@@ -186,6 +186,8 @@ formattedResultsTableFunction <- function(krtInput){
   keyResultsToShow <- krtInput
   
   keyResultsToShow$Value <- mapply(function(s,f){sprintf(f,s)}, krtInput$Value, krtInput$formatString) 
+  
+  keyResultsToShow$Value[[1]] <- paste0("$", format(as.numeric(keyResultsToShow$Value[[1]]), big.mark=","))
   keyResultsToShow <- keyResultsToShow %>%  select(Name, Value)
   
   
