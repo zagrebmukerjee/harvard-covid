@@ -53,6 +53,7 @@ for(t in 1:nrow(testsToRun)){
     diagnosticMatrix <- modelOutputs$diagnosticMatrix
     
     charts <- chartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)
+    ggCharts <- ggPlotChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)
     tables <- tableFunction(tableData = outputData, tableParameters = testParameters, tableDiags = diagnosticNumbers)
     
     formattedTable <- formattedResultsTableFunction(tables$keyResults)

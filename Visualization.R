@@ -74,6 +74,94 @@ chartingFunction <- function(chartData, chartParameters, annotations = TRUE){
     
 }
 
+ggPlotChartingFunction <- function(chartData, chartParameters, annotations = TRUE){
+  # chartData <- outputData
+  # chartParameters <- testParameters
+  # annotations <- TRUE
+  
+  if(annotations){
+    maxInf <- chartData[which.max(chartData$infected),]
+    
+    maxInfAnnotation <- list(
+      x = maxInf$day, y = maxInf$infected, text = paste0("Max Inf.: ", sprintf("%.1f", maxInf$infected)),
+      xref = "x", yref = "y", showarrow = TRUE, arrowhead = 1, ax = -40, ay = -20
+    )
+    
+    maxQuar <- chartData[which.max(chartData$bedsUsed),]
+    
+    
+    maxQuarAnnotation <- list(
+      x = maxQuar$day, y = maxQuar$bedsUsed, text = paste0("Max Quar.: ", sprintf("%.0f", maxQuar$bedsUsed)),
+      xref = "x", yref = "y", showarrow = TRUE, arrowhead = 1, ax = 50, ay = -20
+    )
+  }
+  
+  
+  xRange <- c(0, max(chartData$cycle/chartParameters$mechanicsParameters$cyclesPerDay))
+  yRangeTraj <- c(1.1*min(min(chartData$allRecovered),min(chartData$infected),0),
+                  1.1*max(max(chartData$allRecovered),max(chartData$infected)))
+  yRangeOcc <-c(1.4*min(chartData$bedsUsed),
+                1.4*max(chartData$bedsUsed))
+  
+  yaxisString <- paste0("Number of People (out of ", chartParameters$timeInvariantParams$studentPopulation, ")")
+  
+  chartDataReshape <- chartData %>%  select(Day = day, 
+                                            Infected = infected,
+                                            Recovered = allRecovered, bedsUsed, 
+                                            `False Positives` = falsePositives, 
+                                            `False Positives (Recovered)` = immuneFPs,
+                                            `True Positives (Asymp)` = truePositives, 
+                                            `True Positives (Symp)` = symptomatic) %>% melt(id = "Day")
+  trajData <- chartDataReshape %>%  filter(variable %in% c("Infected", "Recovered"))
+  occData <- chartDataReshape %>%  filter(variable %in% c("False Positives", "False Positives (Recovered)", "True Positives (Asymp)", "True Positives (Symp)"))
+  
+  trajectoryGGPlot <- ggplot(data = trajData, aes(x = Day, y = value, colour = variable)) + 
+    geom_line(size = 1.25) +
+    scale_colour_manual(values = clrs1[1:2]) + theme_bw() + ylab(yaxisString) +
+    scale_x_continuous(limits = xRange, expand = c(0, 0)) + scale_y_continuous(limits = yRangeTraj, expand = c(0,0))  +
+    theme(legend.position = c(0.15, 0.9), legend.title = element_blank(), panel.border = element_blank(),
+          axis.title.y = element_text(margin = margin(t = 0, b = 0, r = 10, l = 0)),
+          axis.title.x = element_text(margin = margin(t = 10, b = 0, r = 0, l = 0))) 
+  
+  occupancyGGPlot <- ggplot(data = occData, aes(x = Day, y = value, fill = variable)) +
+    geom_area() +
+    scale_fill_manual(values = clrs2[4:1]) + theme_bw() +
+    scale_x_continuous(limits = xRange, expand = c(0, 0)) + scale_y_continuous(limits = yRangeOcc, expand = c(0,0))  +
+    theme(legend.position = c(0.25, 0.85), legend.title = element_blank(), legend.text = element_text(size = 8), legend.key.size = unit(.2,"inches"),
+          panel.border = element_blank(),
+          axis.title.y = element_text(margin = margin(t = 0, b = 0, r = 10, l = 0)),
+          axis.title.x = element_text(margin = margin(t = 10, b = 0, r = 0, l = 0)))
+
+  if(annotations){
+    
+    trajectoryGGPlot <- trajectoryGGPlot + annotate(
+      geom = "segment",
+      xend = maxInf$day, x = maxInf$day + 5,
+      yend = maxInf$infected, y = maxInf$infected + yRangeTraj[[2]]/20,
+      size = 1.25, arrow = arrow(angle = 30, length = unit(.1, "inches"))
+    ) + annotate(
+      geom = "text",
+      x = maxInf$day + 5, y = maxInf$infected + 1.4*yRangeTraj[[2]]/20,
+      label = maxInfAnnotation$text, size = 3
+    )
+    
+    occupancyGGPlot <- occupancyGGPlot + annotate(
+      geom = "segment",
+      xend = maxQuar$day, x = maxQuar$day + 5,
+      yend = maxQuar$bedsUsed, y = maxQuar$bedsUsed - yRangeOcc[[2]]/20,
+      size = 1.25, arrow = arrow(angle = 30, length = unit(.1, "inches"))
+    ) + annotate(
+      geom = "text",
+      x = maxQuar$day + 5, y = maxQuar$bedsUsed - 1.4*yRangeOcc[[2]]/20,
+      label = maxQuarAnnotation$text, size = 3
+    )
+  }
+ 
+  
+  return(list(occupancyGGPlot =occupancyGGPlot, trajectoryGGPlot = trajectoryGGPlot))
+   
+}
+
 dashboardChartingFunction <- function(chartData, chartParameters, annotations = TRUE){
  
   

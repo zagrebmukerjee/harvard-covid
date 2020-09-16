@@ -350,7 +350,7 @@ ui <- dashboardPage(
       icon = icon("download"),
       downloadButton(
         outputId = "downloadData",
-        label = "Save Data",
+        label = "PDF Report",
         icon = icon("download"),
         style = "color: black; margin-left: 15px; margin-bottom: 5px;"
       )

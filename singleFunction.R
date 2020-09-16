@@ -95,8 +95,9 @@ campusSIRFunction <- function(
       totalStudentsEnteringQuarantine <-  Reduce(x =  lapply(diagnosticNumbers, function(a){a$newStudentsEnteringQuarantine}), f = sum)
       totalStudentsEnteringIsolation <-  Reduce(x =  lapply(diagnosticNumbers, function(a){a$newStudentsEnteringIsolation}), f = sum)
       
-      charts <- chartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)
+      #charts <- chartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)
       tables <- tableFunction(tableData = outputData, tableParameters = testParameters, tableDiags = diagnosticNumbers)
+      ggCharts <- ggPlotChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)
       
       formattedTable <- formattedResultsTableFunction(tables$keyResults %>%  filter(!(Name %in% c("Accurate Contact Traces", "Total Quarantine Entries")))) 
       chartDisplay <- dashboardChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)$dashboard
@@ -106,15 +107,6 @@ campusSIRFunction <- function(
       toc()
       
       # write.csv(formattedTable, "tmp.csv", row.names = FALSE)
-      
-      if(generatePDF){lightPDFgenerator(list(
-        testParameters = testParameters,
-        outputData = outputData, 
-        diagnosticNumbers = diagnosticNumbers,
-        diagnosticMatrix = diagnosticMatrix,
-        tables = tables,
-        charts = charts
-      ))}
       
       return(output)
       

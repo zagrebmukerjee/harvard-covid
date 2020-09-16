@@ -48,23 +48,19 @@ server <- function(input, output){
    output$downloadData <- downloadHandler(
       filename = function(){"modelReport.pdf"},
       content = function(file){
-         campusSIRFunction(
-            r0 = input$r0,
-            testPCRSpecificity = input$spec,
-            testPCRSensitivity = input$sens,
-            testingTime = input$cad,
-            commInf = input$comm,
-            startingAsymptomatics = input$asymp, 
-            studentPopulation = input$pop,
-            conditionalInfectionProb = input$infectprob,
-            totalDays = input$days,
-            symptomDevelopmentProportion = input$devsymp,
-            testingCost = input$cost,
-            testConfCost = input$confcost,
-            falsePositiveReturnTime = input$reldays,
-            generatePDF = TRUE
-         )
-         file.copy("modelReport.pdf", file)}
+         tempReport <- file.path(tempdir(), "LiteReport.Rmd")
+         file.copy("LiteReport.Rmd", tempReport, overwrite = TRUE)
+         
+         # Set up parameters to pass to Rmd document
+         params <- list(spec = input$spec*100)
+         
+         # Knit the document, passing in the `params` list, and eval it in a
+         # child of the global environment (this isolates the code in the document
+         # from the code in this app).
+         rmarkdown::render(tempReport, output_file = file,
+                           params = params,
+                           envir = new.env(parent = globalenv())
+         )}
    )
    
 }

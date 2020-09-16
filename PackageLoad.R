@@ -4,6 +4,7 @@ library(dplyr)
 library(plotly)
 
 library(knitr)
+library(ggplot2)
 library(kableExtra)
 library(reshape2)
 library(rmarkdown)
