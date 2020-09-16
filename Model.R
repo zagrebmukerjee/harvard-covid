@@ -171,13 +171,16 @@ evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyF
     
     newTestCost <- invariants$testPCRCost/invariants$testingTime * (previousOldState$susceptible + previousOldState$asymptomatic + previousOldState$hiddenRecovered) 
     if(invariants$pooledTests){newTestCost <- newTestCost/invariants$podSize}
-    # conf test cost
-    newTestCost <- newTestCost + invariants$testConfCost * newStudentsEnteringQuarantine
     
+    # conf test cost
+    newTestCost <- newTestCost + invariants$testConfCost * newStudentsEnteringIsolation
+  
     newState$testingCost <- oldState$testingCost + newTestCost
     
   
   } else {newState$testingCost <- oldState$testingCost}
+  
+  
   
   if(newState$cycle %% 24 == 0){print(newState$cycle/mechanics$nCycles)}
   # print(rowSums(oldState %>% select(-cycle, -testingCost)))
