@@ -1,0 +1,203 @@
+---
+title: ""
+header-includes:
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{makecell}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \setlength{\parskip}{1em}
+  - \usepackage{leading}
+  - \leading{5pt}
+output:
+  pdf_document: 
+    extra_dependencies: ["float","booktabs" ]
+urlcolor: blue
+fontsize: 10pt
+geometry: margin=1cm
+---
+
+
+```{r setup, include=FALSE}
+
+
+options(knitr.table.format = "latex")
+defaultW <- getOption("warn") 
+options(warn = -1)
+
+showTitle <- (generateDiff && diffViz) || !generateDiff
+
+
+if(diffViz){
+  tableParamsToShow <- tables$tableParams %>%  filter(Value != 0)
+  if(nrow(tableParamsToShow) == 0) {stop("Diffs need to differ in at least 1 parameter")}
+
+  tableParamsTreatment <- treatmentParamsTable %>%  filter(Name %in% tableParamsToShow$Name)
+  tableParamsControl <- controlParamsTable  %>%  filter(Name %in% tableParamsToShow$Name)
+  
+} else {
+  tableParamsToShow <- tables$tableParams 
+} 
+
+keyResultsToShow <- tables$keyResults
+keyResultsToShow$Notes[is.na(keyResultsToShow$Notes)] <- ""
+
+if(!testParameters$modelParameters$runSerologyTest && !diffViz){tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("testSerSensitivity", "testSerSpecificity", "testSerCost", "runSerologyTest")))}
+if(!testParameters$modelParameters$parties && !diffViz){tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("partyRate", "partySize", "contactsPerParty", "parties")))}
+if(!testParameters$modelParameters$runContactTracing && !diffViz){
+  tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("maxContactsTraced", "contactTracingAccuracy", "contactTracingDelay", "contactTracingResponseRate", "ctDoubleCountAdjustment", "ctQuarTime", "runContactTracing")))
+  
+}
+
+
+if(diffViz){
+
+  tmpParams <- function(r){
+    
+    # compareStr <- ifelse(r$Value > 0, paste0(r$compareG, " "), ifelse(r$Value < 0, paste0(r$compareL, " "), ""))
+    if((r$shortName %in% (c("runSerologyTest", "pooledTests", "runContactTracing", "parties"))) && r$Value == 0){r$textAdd <- paste0("no ", r$textAdd)} 
+    formattedValue <- sprintf(r$diffFormat, r$Value)
+    stringToShow <- paste0(r$textBefore, ifelse(nchar(r$textBefore) > 0, " ", ""), formattedValue, ifelse(nchar(r$textAdd) > 0, " ", ""), r$textAdd)
+    
+    
+  }
+  
+  tmpResults <- function(r){
+    
+    
+    compareStr <- ifelse(r$Value > 0, paste0(r$compareG, " "), ifelse(r$Value < 0, paste0(r$compareL, " "), ""))
+    transformedValue <- eval(parse(text = paste0("(", r$diffTransform, ")","(",r$Value,")")))
+    formattedValue <- sprintf(r$formatString, transformedValue)
+    displayValue <- ifelse(r$Value == 0, r$compareS, formattedValue)
+    
+    if(r$specialDisplay == "Percent"){
+      
+      percentCompare <-  ifelse(r$Value > 0, "more", ifelse(r$Value < 0, "less", ""))
+      
+      r$textAdd <- paste0(r$textAdd, " (", sprintf("%0.0f%%", r$Percent)," ", percentCompare, ")")
+      
+    }
+    if(r$specialDisplay == "ShowBoth"){
+      
+      treatmentValue <- sprintf(r$formatString, r$TreatmentValue)
+      controlValue <- sprintf(r$formatString, r$ControlValue)
+      compareStrBoth <- ifelse(r$Value > 0, "increase", ifelse(r$Value < 0, "decrease", ""))
+      
+      
+      r$textAdd <- paste0(r$textAdd," (an ", compareStrBoth, " from ", controlValue, " to ", treatmentValue, ")")
+      
+    }
+
+    
+    stringToShow <- paste0(displayValue, " ",compareStr, r$textAdd)
+    
+  }
+  
+  autoStringsParamsTreatment <- lapply(X = split(tableParamsTreatment, seq(nrow(tableParamsTreatment))), FUN = tmpParams)
+  autoStringsParamsControl <- lapply(X = split(tableParamsControl, seq(nrow(tableParamsControl))), FUN = tmpParams)
+  autoStringsResults <- lapply(X = split(keyResultsToShow[1:4,], seq(nrow(keyResultsToShow[1:4,]))), FUN = tmpResults)
+  
+  treatmentString <- Reduce(x = autoStringsParamsTreatment, f = function(a,b){paste0(a, ", ", b)})
+  treatmentString <- paste0("**Treatment**: ", treatmentString)
+  treatmentString <- paste0(gsub("\\s+"," ",treatmentString), ".  (Details on Page 2)  \n")
+
+  controlString <- Reduce(x = autoStringsParamsControl, f = function(a,b){paste0(a, ", ", b)})
+  controlString <- paste0("**Control**: ", controlString)
+  controlString <- paste0(gsub("\\s+"," ",controlString), ".  (Details on Page 3)  \n")
+
+    
+  takeAwayString <- Reduce(x = autoStringsResults, f = function(a,b){paste0(a, ", ", b)})
+  takeAwayString <- paste0("**Conclusion**: Changing from Control to Treatment shows: ", takeAwayString)
+  takeAwayString <- gsub("\\s+"," ",takeAwayString)
+  if(nchar(testDetails$explanatoryText) > 0 && is.character(testDetails$explanatoryText)){takeAwayString <- paste0(takeAwayString, paste0("^[",testDetails$explanatoryText,"]" ))}
+  
+  
+} 
+
+tableParamsToShow$Value <- mapply(function(s,f){sprintf(f,s)}, tableParamsToShow$Value, tableParamsToShow$formatString) 
+keyResultsToShow$Value <- mapply(function(s,f){sprintf(f,s)}, tables$keyResults$Value, tables$keyResults$formatString) 
+keyResultsToShow <- keyResultsToShow %>%  select(Name, Value, Notes)
+
+if(!testParameters$modelParameters$runContactTracing && !diffViz){keyResultsToShow <- keyResultsToShow %>%  filter(!(Name %in% c("Accurate Contact Traces")))}
+
+epiTable <- tableParamsToShow %>%  filter(paramType == "epi") %>%  select(Name, Value, Notes)
+testTable <- tableParamsToShow %>%  filter(paramType == "test") %>% select(Name, Value, Notes)
+polTable <- tableParamsToShow %>%  filter(paramType == "pol") %>% select(Name, Value, Notes)
+
+```
+
+`r if(showTitle) "## Subcommittee for Evidence-Based Decision Making (of the Committee for Testing and Tracing, Harvard University) ^[Contact: Gary King <king@harvard.edu>, Zagreb Mukerjee <zagrebmukerjee@fas.harvard.edu>] \n"` 
+
+`r paste0("### Summary Report: ", longName)`
+
+`r if(diffViz){"**Scenarios Evaluated:**  \n"}`
+`r if(diffViz) paste0("|            ", treatmentString) `
+`r if(diffViz) paste0("|            ", controlString) `
+
+`r if(diffViz) "|           Other parameters: held constant, as described on pages 2 and 3" `
+
+`r if(diffViz) takeAwayString `
+
+
+
+`r   if(nrow(epiTable) == 0) {""}`
+```{r epiParams, echo = FALSE,comment=NA,background=NA}
+  
+  if(nrow(epiTable > 0) && !diffViz) {
+    epiTable %>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE) %>%
+      kable_styling(latex_options = c("striped"), font_size = 8, position = "center")} 
+```
+
+`r   if(!diffViz) {"**Testing Parameters**"} else {""}`
+```{r testParams, echo = FALSE,comment=NA,background=NA}
+  if(nrow(testTable > 0) && !diffViz) {
+    
+    testTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE) %>%
+      kable_styling(latex_options = c("striped"), font_size = 8, position = "center")}  
+
+```
+
+`r   if(!diffViz) {"**Policy Parameters**"} else {""}`
+
+```{r policyParams, echo = FALSE,comment=NA,background=NA}
+  
+  if(nrow(polTable > 0) && !diffViz) {
+    polTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE) %>%
+      kable_styling(latex_options = c("striped"), font_size = 8, position = "center")}
+
+
+```
+  
+`r   if(!diffViz) {"**Detailed Results**"} else {"**Detail: Increases in Results**"}`
+```{r keyRes, echo = FALSE}
+ keyResultsToShow %>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE) %>% 
+  kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+
+
+```
+
+```{r trajectory, echo=FALSE, include=FALSE}
+p <- subplot(charts$trajectoryChart, charts$occupancyChart, titleX = TRUE, titleY = TRUE) %>%
+  layout(showlegend = FALSE, title = "Disease Trajectory & Isolation Occupancy") %>%
+  layout(height = 400, width = 800)
+
+orca(p, "subplot.png", scale = 2)
+
+```
+```{r plots, echo=FALSE, out.extra = "trim={0 -2cm 0 0},clip", out.width="80%",out.height="80%", fig.align="center"}
+knitr::include_graphics("subplot.png")
+```
+
+```{r end, include = FALSE}
+
+options(warn = defaultW)
+
+```

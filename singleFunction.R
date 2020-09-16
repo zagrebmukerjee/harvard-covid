@@ -17,7 +17,8 @@ campusSIRFunction <- function(
     symptomDevelopmentProportion,
     testingCost,
     testConfCost,
-    falsePositiveReturnTime
+    falsePositiveReturnTime,
+    generatePDF = FALSE
   ){
    
   
@@ -104,7 +105,16 @@ campusSIRFunction <- function(
       output <- list("chart" = chartDisplay, "table" = formattedTable)
       toc()
       
-      write.csv(formattedTable, "tmp.csv", row.names = FALSE)
+      # write.csv(formattedTable, "tmp.csv", row.names = FALSE)
+      
+      if(generatePDF){lightPDFgenerator(list(
+        testParameters = testParameters,
+        outputData = outputData, 
+        diagnosticNumbers = diagnosticNumbers,
+        diagnosticMatrix = diagnosticMatrix,
+        tables = tables,
+        charts = charts
+      ))}
       
       return(output)
       

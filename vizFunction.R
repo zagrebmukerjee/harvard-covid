@@ -146,3 +146,25 @@ vizRunner <- function(generateDiff = FALSE, stitch = FALSE, testDetails, scenari
   
 }
 
+
+lightPDFgenerator <- function(outputs){
+  
+  
+  testName <- "Placeholder text shortName"
+  longName <- "Placeholder text longName"
+  
+  testParameters <- outputs$testParameters
+  outputData <- outputs$outputData
+  charts <- outputs$charts
+  tables <- outputs$tables
+  
+  
+  diffViz <- FALSE
+  generateDiff <- FALSE
+  
+  
+  render("Visualization.Rmd", output_file =  "modelReport.pdf", quiet = TRUE)
+  
+  return(NULL)
+}
+
