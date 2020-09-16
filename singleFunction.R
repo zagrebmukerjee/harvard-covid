@@ -103,7 +103,12 @@ campusSIRFunction <- function(
 
       output <- list("chart" = chartDisplay, "table" = formattedTable)
       toc()
+      
+      write.csv(formattedTable, "tmp.csv", row.names = FALSE)
+      
       return(output)
+      
+      
     }
     
     

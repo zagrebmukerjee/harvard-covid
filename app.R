@@ -47,7 +47,7 @@ server <- function(input, output){
    
    output$downloadData <- downloadHandler(
       filename = function(){"test.csv"},
-      content = function(file){write.csv(funList()$table, file, row.names = FALSE)}
+      content = function(file){file.copy("tmp.csv", file)}
    )
    
 }
