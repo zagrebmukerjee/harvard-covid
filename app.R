@@ -45,6 +45,11 @@ server <- function(input, output){
          class = 'order-column cell-border hover'
       )})
    
+   output$downloadData <- downloadHandler(
+      filename = function(){"test.csv"},
+      content = function(file){write.csv(funList()$table, file, row.names = FALSE)}
+   )
+   
 }
 
 

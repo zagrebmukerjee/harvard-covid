@@ -348,11 +348,6 @@ ui <- dashboardPage(
       "Download Selection",
       tabName = "download",
       icon = icon("download"),
-      textInput(
-        inputId = "filename",
-        placeholder = "Name download file",
-        label = ""
-      ),
       downloadButton(
         outputId = "downloadData",
         label = "Save Data",
