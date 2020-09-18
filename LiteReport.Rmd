@@ -32,6 +32,7 @@ params:
 
 ```
 ```{r epiParams, echo = FALSE,comment=NA,background=NA}
+
 # params$table %>% kable(align = "lcr", col.names = NULL, booktabs = TRUE) %>% 
   # kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
 
