@@ -9,6 +9,7 @@ library(rintrojs)
 library(plotly)
 library(dplyr)
 library(DT)
+library(gridExtra)
 
 source("singleFunction.R")
 source("ui.R")
@@ -52,7 +53,7 @@ server <- function(input, output){
          file.copy("LiteReport.Rmd", tempReport, overwrite = TRUE)
          
          # Set up parameters to pass to Rmd document
-         params <- list(spec = input$spec*100)
+         params <- list(spec = input$spec*100, table = funList()$table, ggCharts = funList()$reportCharts)
          
          # Knit the document, passing in the `params` list, and eval it in a
          # child of the global environment (this isolates the code in the document

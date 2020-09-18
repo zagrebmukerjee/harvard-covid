@@ -3,16 +3,18 @@ title: "Lite Report"
 output: pdf_document
 params:
   spec: NA
+  table: NA
+  ggCharts: NA
 ---
 
 ```{r}
 # The `params` object is available in the document.
-params$spec
+params$table
 ```
 
 A plot of `params$spec` random points.
 
-```{r}
-plot(rnorm(params$spec), rnorm(params$spec))
-# ggplot(data.frame(x = rnorm(100),y =  params$spec*rnorm(100)), aes(x = x, y = y)) + geom_point()
+```{r, echo = FALSE}
+grid.arrange(params$ggCharts$trajectoryGGPlot, params$ggCharts$occupancyGGPlot, ncol = 2)
 ```
+

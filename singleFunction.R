@@ -103,7 +103,7 @@ campusSIRFunction <- function(
       chartDisplay <- dashboardChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)$dashboard
       
 
-      output <- list("chart" = chartDisplay, "table" = formattedTable)
+      output <- list("chart" = chartDisplay, "table" = formattedTable, "reportCharts" = ggCharts)
       toc()
       
       # write.csv(formattedTable, "tmp.csv", row.names = FALSE)
