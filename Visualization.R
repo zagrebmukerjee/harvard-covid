@@ -116,44 +116,45 @@ ggPlotChartingFunction <- function(chartData, chartParameters, annotations = TRU
   occData <- chartDataReshape %>%  filter(variable %in% c("False Positives", "False Positives (Recovered)", "True Positives (Asymp)", "True Positives (Symp)"))
   
   trajectoryGGPlot <- ggplot(data = trajData, aes(x = Day, y = value, colour = variable)) + 
-    geom_line(size = 1.25) +
+    geom_line(size = 1) +
     scale_colour_manual(values = clrs1[1:2]) + theme_bw() + ylab(yaxisString) +
     scale_x_continuous(limits = xRange, expand = c(0, 0)) + scale_y_continuous(limits = yRangeTraj, expand = c(0,0))  +
-    theme(legend.position = c(0.15, 0.9), legend.title = element_blank(), panel.border = element_blank(),
-          axis.title.y = element_text(margin = margin(t = 0, b = 0, r = 10, l = 0)),
-          axis.title.x = element_text(margin = margin(t = 10, b = 0, r = 0, l = 0))) 
+    theme(legend.position = c(0.2, 0.9), legend.title = element_blank(), legend.text = element_text(size = 6), legend.key.size = unit(.15,"inches"),
+          panel.border = element_blank(),
+          axis.title.y = element_text(size = 8, margin = margin(t = 0, b = 0, r = 10, l = 0)),
+          axis.title.x = element_text(size = 8, margin = margin(t = 10, b = 0, r = 0, l = 0))) 
   
   occupancyGGPlot <- ggplot(data = occData, aes(x = Day, y = value, fill = variable)) +
     geom_area() +
-    scale_fill_manual(values = clrs2[4:1]) + theme_bw() +
+    scale_fill_manual(values = clrs2[4:1]) + theme_bw() + ylab("Beds Used") +
     scale_x_continuous(limits = xRange, expand = c(0, 0)) + scale_y_continuous(limits = yRangeOcc, expand = c(0,0))  +
-    theme(legend.position = c(0.25, 0.85), legend.title = element_blank(), legend.text = element_text(size = 8), legend.key.size = unit(.2,"inches"),
+    theme(legend.position = c(0.25, 0.85), legend.title = element_blank(), legend.text = element_text(size = 6), legend.key.size = unit(.15,"inches"),
           panel.border = element_blank(),
-          axis.title.y = element_text(margin = margin(t = 0, b = 0, r = 10, l = 0)),
-          axis.title.x = element_text(margin = margin(t = 10, b = 0, r = 0, l = 0)))
+          axis.title.y = element_text(size = 8, margin = margin(t = 0, b = 0, r = 10, l = 0)),
+          axis.title.x = element_text(size = 8, margin = margin(t = 10, b = 0, r = 0, l = 0)))
 
   if(annotations){
     
     trajectoryGGPlot <- trajectoryGGPlot + annotate(
       geom = "segment",
-      xend = maxInf$day, x = maxInf$day + 5,
+      xend = maxInf$day, x = maxInf$day - 10,
       yend = maxInf$infected, y = maxInf$infected + yRangeTraj[[2]]/20,
-      size = 1.25, arrow = arrow(angle = 30, length = unit(.1, "inches"))
+      size = .5, arrow = arrow(angle = 30, length = unit(.1, "inches"))
     ) + annotate(
       geom = "text",
-      x = maxInf$day + 5, y = maxInf$infected + 1.4*yRangeTraj[[2]]/20,
-      label = maxInfAnnotation$text, size = 3
+      x = maxInf$day - 10, y = maxInf$infected + 1.4*yRangeTraj[[2]]/20,
+      label = maxInfAnnotation$text, size = 2.5
     )
     
     occupancyGGPlot <- occupancyGGPlot + annotate(
       geom = "segment",
       xend = maxQuar$day, x = maxQuar$day + 5,
       yend = maxQuar$bedsUsed, y = maxQuar$bedsUsed - yRangeOcc[[2]]/20,
-      size = 1.25, arrow = arrow(angle = 30, length = unit(.1, "inches"))
+      size = .5, arrow = arrow(angle = 30, length = unit(.1, "inches"))
     ) + annotate(
       geom = "text",
       x = maxQuar$day + 5, y = maxQuar$bedsUsed - 1.4*yRangeOcc[[2]]/20,
-      label = maxQuarAnnotation$text, size = 3
+      label = maxQuarAnnotation$text, size = 2.5
     )
   }
  

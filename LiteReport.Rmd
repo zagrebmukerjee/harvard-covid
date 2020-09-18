@@ -1,18 +1,45 @@
 ---
-title: "Lite Report"
-output: pdf_document
+title: ""
+header-includes:
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{makecell}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \setlength{\parskip}{1em}
+  - \usepackage{leading}
+  - \leading{5pt}
+output:
+  pdf_document: 
+    extra_dependencies: ["float","booktabs" ]
 params:
   spec: NA
   table: NA
   ggCharts: NA
 ---
 
-```{r}
-# The `params` object is available in the document.
-params$table
+```{r, include=FALSE}
+
+# options(knitr.table.format = "latex")
+
+```
+```{r epiParams, echo = FALSE,comment=NA,background=NA}
+params$table %>% kable(align = "lcr", col.names = NULL, booktabs = TRUE) %>% 
+  kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+
+ # epiTable %>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE) %>%
+ #      kable_styling(latex_options = c("striped"), font_size = 8, position = "center")} 
+
 ```
 
-A plot of `params$spec` random points.
 
 ```{r, echo = FALSE}
 grid.arrange(params$ggCharts$trajectoryGGPlot, params$ggCharts$occupancyGGPlot, ncol = 2)
