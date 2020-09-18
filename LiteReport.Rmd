@@ -26,22 +26,19 @@ params:
   ggCharts: NA
 ---
 
-```{r, include=FALSE}
+```{r intro, include=FALSE}
 
 # options(knitr.table.format = "latex")
 
 ```
 ```{r epiParams, echo = FALSE,comment=NA,background=NA}
-params$table %>% kable(align = "lcr", col.names = NULL, booktabs = TRUE) %>% 
-  kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
-
- # epiTable %>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE) %>%
- #      kable_styling(latex_options = c("striped"), font_size = 8, position = "center")} 
+# params$table %>% kable(align = "lcr", col.names = NULL, booktabs = TRUE) %>% 
+  # kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
 
 ```
 
 
-```{r, echo = FALSE}
+```{r charts, echo = FALSE}
 grid.arrange(params$ggCharts$trajectoryGGPlot, params$ggCharts$occupancyGGPlot, ncol = 2)
 ```
 
