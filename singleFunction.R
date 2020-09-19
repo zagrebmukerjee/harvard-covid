@@ -101,9 +101,9 @@ campusSIRFunction <- function(
       
       formattedTable <- formattedResultsTableFunction(tables$keyResults %>%  filter(!(Name %in% c("Accurate Contact Traces", "Total Quarantine Entries")))) 
       chartDisplay <- dashboardChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)$dashboard
-      
+      formattedParameterTable <- formattedParameterTableFunction(tables$tableParams)
 
-      output <- list("chart" = chartDisplay, "table" = formattedTable, "reportCharts" = ggCharts)
+      output <- list("chart" = chartDisplay, "table" = formattedTable, "paramTable" = formattedParameterTable, "reportCharts" = ggCharts)
       toc()
       
       # write.csv(formattedTable, "tmp.csv", row.names = FALSE)

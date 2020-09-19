@@ -281,3 +281,30 @@ formattedResultsTableFunction <- function(krtInput){
   
   
 }
+
+
+
+formattedParameterTableFunction <- function(rawTableInput){
+  
+  tableParamsToShow <- tables$tableParams 
+  
+  
+  
+  if(!testParameters$modelParameters$runSerologyTest){tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("testSerSensitivity", "testSerSpecificity", "testSerCost", "runSerologyTest")))}
+  if(!testParameters$modelParameters$parties){tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("partyRate", "partySize", "contactsPerParty", "parties")))}
+  if(!testParameters$modelParameters$runContactTracing){
+    tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("maxContactsTraced", "contactTracingAccuracy", "contactTracingDelay", "contactTracingResponseRate", "ctDoubleCountAdjustment", "ctQuarTime", "runContactTracing")))
+  }
+  
+  tableParamsToShow$Value <- mapply(function(s,f){sprintf(f,s)}, tableParamsToShow$Value, tableParamsToShow$formatString) 
+  
+  
+  epiTable <- tableParamsToShow %>%  filter(paramType == "epi") %>%  select(Name, Value, Notes)
+  testTable <- tableParamsToShow %>%  filter(paramType == "test") %>% select(Name, Value, Notes)
+  polTable <- tableParamsToShow %>%  filter(paramType == "pol") %>% select(Name, Value, Notes)
+  
+  
+  return(list(epiTable = epiTable, testTable = testTable, polTable = polTable))
+  
+  
+}

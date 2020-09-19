@@ -57,6 +57,7 @@ for(t in 1:nrow(testsToRun)){
     tables <- tableFunction(tableData = outputData, tableParameters = testParameters, tableDiags = diagnosticNumbers)
     
     formattedTable <- formattedResultsTableFunction(tables$keyResults)
+    formattedParameterTable <- formattedParameterTableFunction(tables$tableParams)
     
     outputs <- list(
       testParameters = testParameters,

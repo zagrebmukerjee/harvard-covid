@@ -17,7 +17,7 @@ source("ui.R")
 
 server <- function(input, output){
    
-   session$allowReconnect("force") # this will stop it going grey, we hope
+   # session$allowReconnect("force") # this will stop it going grey, we hope
    
    funList <- reactive({
       campusSIRFunction(
@@ -55,7 +55,7 @@ server <- function(input, output){
          file.copy("LiteReport.Rmd", tempReport, overwrite = TRUE)
          
          # Set up parameters to pass to Rmd document
-         params <- list(spec = input$spec*100, table = funList()$table, ggCharts = funList()$reportCharts)
+         params <- list(spec = input$spec*100, table = funList()$table, ggCharts = funList()$reportCharts, paramTable = funList()$paramTable)
          
          # Knit the document, passing in the `params` list, and eval it in a
          # child of the global environment (this isolates the code in the document

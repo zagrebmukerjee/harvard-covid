@@ -24,6 +24,7 @@ params:
   spec: NA
   table: NA
   ggCharts: NA
+  paramTable: NA
 ---
 
 ```{r intro, include=FALSE}
@@ -31,15 +32,36 @@ params:
 options(knitr.table.format = "latex")
 
 ```
-```{r epiParams, echo = FALSE,comment=NA,background=NA}
 
-params$table %>% kable(align = "lcr", col.names = NULL, booktabs = TRUE, format = "latex") %>%
+## Subcommittee for Evidence-Based Decision Making (of the Committee for Testing and Tracing, Harvard University) ^[Contact: Gary King <king@harvard.edu>, Zagreb Mukerjee <zagrebmukerjee@fas.harvard.edu>] 
+
+### Summary Report
+
+```{r epiParams, echo = FALSE,comment=NA,background=NA}
+  
+params$paramTable$epiTable %>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+  kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+```
+
+**Testing Parameters**
+```{r testParams, echo = FALSE,comment=NA,background=NA}
+params$paramTable$testTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
   kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
 
 ```
 
+**Policy Parameters**
 
-```{r charts, echo = FALSE}
+```{r policyParams, echo = FALSE,comment=NA,background=NA}
+  
+params$paramTable$polTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+    kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+
+
+```
+  
+
+```{r charts, echo = FALSE, fig.height=4}
 grid.arrange(params$ggCharts$trajectoryGGPlot, params$ggCharts$occupancyGGPlot, ncol = 2)
 ```
 
