@@ -286,9 +286,9 @@ formattedResultsTableFunction <- function(krtInput){
 
 formattedParameterTableFunction <- function(rawTableInput){
   
-  tableParamsToShow <- tables$tableParams 
+  # tableParamsToShow <- tables$tableParams 
   
-  
+  tableParamsToShow <- rawTableInput
   
   if(!testParameters$modelParameters$runSerologyTest){tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("testSerSensitivity", "testSerSpecificity", "testSerCost", "runSerologyTest")))}
   if(!testParameters$modelParameters$parties){tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("partyRate", "partySize", "contactsPerParty", "parties")))}
