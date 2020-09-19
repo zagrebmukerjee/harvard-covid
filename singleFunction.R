@@ -101,7 +101,7 @@ campusSIRFunction <- function(
       
       formattedTable <- formattedResultsTableFunction(tables$keyResults %>%  filter(!(Name %in% c("Accurate Contact Traces", "Total Quarantine Entries")))) 
       chartDisplay <- dashboardChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)$dashboard
-      formattedParameterTable <- formattedParameterTableFunction(tables$tableParams)
+      formattedParameterTable <- formattedParameterTableFunction(tables$tableParams, testParameters = testParameters)
 
       output <- list("chart" = chartDisplay, "table" = formattedTable, "paramTable" = formattedParameterTable, "reportCharts" = ggCharts)
       toc()

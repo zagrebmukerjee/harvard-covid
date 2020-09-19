@@ -284,7 +284,7 @@ formattedResultsTableFunction <- function(krtInput){
 
 
 
-formattedParameterTableFunction <- function(rawTableInput){
+formattedParameterTableFunction <- function(rawTableInput, testParameters){
   
   # tableParamsToShow <- tables$tableParams 
   
@@ -295,6 +295,8 @@ formattedParameterTableFunction <- function(rawTableInput){
   if(!testParameters$modelParameters$runContactTracing){
     tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("maxContactsTraced", "contactTracingAccuracy", "contactTracingDelay", "contactTracingResponseRate", "ctDoubleCountAdjustment", "ctQuarTime", "runContactTracing")))
   }
+  
+  if(!testParameters$modelParameters$pooledTests){tableParamsToShow <- tableParamsToShow %>%  filter(!(shortName %in% c("pooledTests")))}
   
   tableParamsToShow$Value <- mapply(function(s,f){sprintf(f,s)}, tableParamsToShow$Value, tableParamsToShow$formatString) 
   
