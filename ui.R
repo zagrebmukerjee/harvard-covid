@@ -24,7 +24,7 @@ dashboardTheme <- shinyDashboardThemeDIY(
   ,bodyBackColor = "rgb(255,255,255)"
   
   ### header
-  ,logoBackColor = "rgb(23,103,124)"
+  ,logoBackColor = "#A51C30"
   
   ,headerButtonBackColor = "rgb(255,255,255)"
   ,headerButtonIconColor = "rgb(75,75,75)"
@@ -42,7 +42,7 @@ dashboardTheme <- shinyDashboardThemeDIY(
   ,sidebarPadding = 10
   ,sidebarShadowColor = "0px 0px 0px"
   
-  ,sidebarMenuBackColor = "#E6F4F1"
+  ,sidebarMenuBackColor = "#E8E8E8"
   ,sidebarMenuPadding = 5
   ,sidebarMenuBorderRadius = 20
   
@@ -58,11 +58,11 @@ dashboardTheme <- shinyDashboardThemeDIY(
   ,sidebarTabBorderColor = "none"
   ,sidebarTabBorderWidth = 0
   
-  ,sidebarTabBackColorSelected = "#B4DDD5"
-  ,sidebarTabTextColorSelected = "rgb(255,255,255)"
+  ,sidebarTabBackColorSelected = "#D3D3D3"
+  ,sidebarTabTextColorSelected = "rgb(0,0,0)"
   ,sidebarTabRadiusSelected = "30px"
   
-  ,sidebarTabBackColorHover = "#B4DDD5"
+  ,sidebarTabBackColorHover = "#D3D3D3"
   ,sidebarTabTextColorHover = "rgb(0,0,0)"
   ,sidebarTabBorderStyleHover = "none"
   ,sidebarTabBorderColorHover = "none"
@@ -114,11 +114,11 @@ dashboardTheme <- shinyDashboardThemeDIY(
   
 )
 
-ui <- dashboardPage(
+ui <- dashboardPage(title="Campus Covid-19 Model",
   
   dashboardHeader(
     title = dashboardLogo,
-    titleWidth = 500
+    titleWidth = 450
   ),
   
   dashboardSidebar(
@@ -132,17 +132,22 @@ ui <- dashboardPage(
                # bsButton(inputId = "compute",
                #          label = "COMPUTE",
                #          icon = icon("play-circle"),
-               #          style = "primary",
-               #          size = "large")
+               #          style = "default")
            ),
+           # div(style="display:inline-block",
+           #     bsButton(inputId = "reset", 
+           #              label = "RESET", 
+           #              icon = icon("refresh"), 
+           #              style = "default"
+           #              )
+           #    ),
            div(style="display:inline-block",
-               bsButton(inputId = "reset", 
-                        label = "RESET", 
-                        icon = icon("refresh"), 
-                        style = "default",
-                        # size = "large"
-                        )
-           )
+               downloadButton(
+                 outputId = "downloadData",
+                 label = "DOWNLOAD PDF",
+                 icon = icon("download"),
+                 style = "color: black; margin-left: 10px;"
+               ))
           ),
   br(),
   sidebarMenu(
@@ -161,7 +166,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "r0", 
-        "R0 describes how many new infections patient zero produces over the course of their illness.",
+        "How many new infections patient zero produces over the course of their illness",
         placement = "bottom", 
         trigger = "hover"
       ),
@@ -175,7 +180,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "sens", 
-        "Test sensitivity is equal to 1 - false negative rate.",
+        "Equal to 1 - false negative rate",
         placement = "bottom", 
         trigger = "hover"
       ),
@@ -189,7 +194,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "spec", 
-        "Test specificity is equal to 1 - false positive rate.",
+        "Equal to 1 - false positive rate",
         placement = "bottom", 
         trigger = "hover"
       ),
@@ -203,7 +208,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "cad", 
-        "This shows a test is performed every X days.",
+        "A test performed every X days",
         placement = "bottom", 
         trigger = "hover"
       ),
@@ -248,7 +253,7 @@ ui <- dashboardPage(
         max = 100000
       ),
       bsTooltip(
-        "comm", 
+        "pop", 
         "How many students are on campus",
         placement = "bottom", 
         trigger = "hover"
@@ -263,7 +268,7 @@ ui <- dashboardPage(
         post = "%"
       ),
       bsTooltip(
-        "comm", 
+        "infectprob", 
         "The probability of infection given a 15-minute, unmasked, indoors contact between two people",
         placement = "bottom", 
         trigger = "hover"
@@ -278,7 +283,7 @@ ui <- dashboardPage(
         post = " days"
       ),
       bsTooltip(
-        "comm", 
+        "days", 
         "How many days to run the simulation",
         placement = "bottom", 
         trigger = "hover"
@@ -293,7 +298,7 @@ ui <- dashboardPage(
         post = "%"
       ),
       bsTooltip(
-        "comm", 
+        "devsymp", 
         "What proportion of those infected develop some degree of symptom",
         placement = "bottom", 
         trigger = "hover"
@@ -308,7 +313,7 @@ ui <- dashboardPage(
         pre = "$"
       ),
       bsTooltip(
-        "comm", 
+        "cost", 
         "Cost of administering a PCR test",
         placement = "bottom", 
         trigger = "hover"
@@ -323,7 +328,7 @@ ui <- dashboardPage(
         pre = "$"
       ),
       bsTooltip(
-        "comm", 
+        "confcost", 
         "Cost of testing administered on entering isolation",
         placement = "bottom", 
         trigger = "hover"
@@ -337,46 +342,21 @@ ui <- dashboardPage(
         post = " days"
       ),
       bsTooltip(
-        "comm", 
+        "reldays", 
         "Days it takes to release a false positive from isolation",
         placement = "bottom", 
         trigger = "hover"
-      )
-    ),
-    
-    menuItem(
-      "Download Selection",
-      tabName = "download",
-      icon = icon("download"),
-      downloadButton(
-        outputId = "downloadData",
-        label = "PDF Report",
-        icon = icon("download"),
-        style = "color: black; margin-left: 15px; margin-bottom: 5px;"
       )
     )
     
   )),
   
   dashboardBody(
+    dashboardTheme,
+    fluidRow(
+      box(width=10, plotlyOutput('plot'))),
+    fluidRow(
+      box(width=6, DT::dataTableOutput("tabledata"))),
+    textOutput("description")
     
-  tags$head(
-    tags$style(
-      "body{
-        min-height: 611px;
-        height: auto;
-        max-width: 1600px;
-        margin: auto;
-      }"
-    )
-  ),
-  dashboardTheme,
-  plotlyOutput('plot'),
-  tabsetPanel(
-    id = 'dataset',
-    tabPanel("Summary Results", DT::dataTableOutput("tabledata"))
-  ),
-  br(),
-  textOutput("description")
-  
 ))
