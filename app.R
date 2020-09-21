@@ -44,8 +44,9 @@ server <- function(input, output){
       DT::datatable(
          funList()$table,
          rownames = FALSE,
-         options = list(paging = FALSE, searching = FALSE),
-         class = 'order-column cell-border hover'
+         colnames = c("", ""),
+         options = list(paging = FALSE, searching = FALSE, dom = "t"),
+         class = 'order-column cell-border hover',
       )})
    
    output$downloadData <- downloadHandler(

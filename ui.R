@@ -144,7 +144,7 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
            div(style="display:inline-block",
                downloadButton(
                  outputId = "downloadData",
-                 label = "DOWNLOAD PDF",
+                 label = "GET PDF REPORT",
                  icon = icon("download"),
                  style = "color: black; margin-left: 10px;"
                ))
@@ -354,9 +354,9 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
   dashboardBody(
     dashboardTheme,
     fluidRow(
-      box(width=10, plotlyOutput('plot'))),
+      box(width=15, plotlyOutput('plot'))),
     fluidRow(
-      box(width=6, DT::dataTableOutput("tabledata"))),
+      box(width=15, DT::dataTableOutput("tabledata"))),
     textOutput("description")
     
 ))
