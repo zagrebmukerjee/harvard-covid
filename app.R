@@ -15,9 +15,9 @@ source("singleFunction.R")
 source("ui.R")
 
 
-server <- function(input, output){
+server <- function(input, output, session){
    
-   # session$allowReconnect("force") # this will stop it going grey, we hope
+   session$allowReconnect("force") # this will stop it going grey, we hope
    
    funList <- reactive({
       campusSIRFunction(
