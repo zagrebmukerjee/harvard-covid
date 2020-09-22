@@ -354,7 +354,18 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
   dashboardBody(
     dashboardTheme,
     fluidRow(
-      h5("    -> Header Placeholder", align = "left")
+      tags$div(tags$body(
+        "Dashboard by Olivia Fu,",
+        tags$a(href="gking.harvard.edu", "Gary King,"),
+        tags$a(href="https://projects.iq.harvard.edu/zmukerjee", "Zagreb Mukerjee."),
+        "Based on",
+        tags$a(href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2768923", "this paper."),
+        "For more information, see",
+        tags$a(href="brokenlink", "here."),
+        
+      )),
+      tags$div(tags$body("This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."))
+      
     ),
     fluidRow(
       box(width=15, plotlyOutput('plot'))),
