@@ -354,6 +354,9 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
   dashboardBody(
     dashboardTheme,
     fluidRow(
+      h5("    -> Header Placeholder", align = "left")
+    ),
+    fluidRow(
       box(width=15, plotlyOutput('plot'))),
     fluidRow(
       box(width=15, DT::dataTableOutput("tabledata"))),
