@@ -18,7 +18,8 @@ campusSIRFunction <- function(
     testingCost,
     testConfCost,
     falsePositiveReturnTime,
-    generatePDF = FALSE
+    podSizeInput,
+    podInfectionProbInput
   ){
    
   
@@ -75,6 +76,8 @@ campusSIRFunction <- function(
       scenariosToRun[scenarioNumber, ]$testConfCost <- testConfCost
       scenariosToRun[scenarioNumber, ]$falsePositiveReturnTime <- falsePositiveReturnTime
 
+      scenariosToRun[scenarioNumber, ]$podSize <- podSizeInput
+      scenariosToRun[scenarioNumber, ]$intraPodInfectionProb <- podInfectionProbInput/100
       
       testParameters <- parameterSetupFunction(scenarioNumber, scenariosToRun)
       

@@ -168,7 +168,7 @@ parameterSetupFunction <- function(scenarioNumber, testMatrix){
   timeInvariantParams$testingRate <- 1/ timeInvariantParams$testingTime # tau
   
   timeInvariantParams$asymptomaticTransRate <- timeInvariantParams$infectionRate * (timeInvariantParams$recoveryRate + timeInvariantParams$symptomOnsetRate) # beta
-  timeInvariantParams$hhTransRate <- (timeInvariantParams$hhInfectionRate * (timeInvariantParams$podSize - 1)) * (timeInvariantParams$recoveryRate + timeInvariantParams$symptomOnsetRate) # beta for households
+  # timeInvariantParams$hhTransRate <- (timeInvariantParams$hhInfectionRate * (timeInvariantParams$podSize - 1)) * (timeInvariantParams$recoveryRate + timeInvariantParams$symptomOnsetRate) # beta for households
   
   k <- timeInvariantParams$conditionalMortality /(timeInvariantParams$symptomOnsetRate / (timeInvariantParams$symptomOnsetRate + timeInvariantParams$recoveryRate))
   timeInvariantParams$deathRate <- k *  timeInvariantParams$recoveryRate/(1-k)

@@ -152,7 +152,7 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
   br(),
   sidebarMenu(
     menuItem(
-      "Assumptions",
+      "Basic Assumptions",
       tabName = "assumptions",
       icon = icon("clipboard-list"),
       startExpanded = TRUE,
@@ -242,9 +242,9 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
     ),
     
     menuItem(
-      "Advanced",
-      tabName = "advanced",
-      icon = icon("cog"),
+      "Population and Social",
+      tabName = "social",
+      icon = icon("user-graduate"),
       numericInput(
         inputId = "pop",
         label = "Student Population",
@@ -258,6 +258,42 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
         placement = "bottom", 
         trigger = "hover"
       ),
+      sliderInput(
+        inputId = "podSizeInput", 
+        label = "Average Size of Shared Housing",
+        value = 1, 
+        min = 1, 
+        max = 15, 
+        step = 1
+      ),
+      bsTooltip(
+        "podSize", 
+        "Number of students living together on average (sharing a bathroom)",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      sliderInput(
+        inputId = "podInfectionProbInput", 
+        label = "Probability of Roommate Infection",
+        value = 15, 
+        min = 0, 
+        max = 50, 
+        step = 5,
+        post = "%"
+      ),
+      bsTooltip(
+        "podInfRate", 
+        "Cumulative probability that a sick roommate infects a healthy one",
+        placement = "bottom", 
+        trigger = "hover"
+      )
+      
+    ),
+    
+    menuItem(
+      "More Assumptions",
+      tabName = "advanced",
+      icon = icon("cog"),
       sliderInput(
         inputId = "infectprob", 
         label = "Probability of Infection Given Contact",
@@ -330,6 +366,20 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
       bsTooltip(
         "confcost", 
         "Cost of testing administered on entering isolation",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      sliderInput(
+        inputId = "reldays", 
+        label = "False Positive release time",
+        value = 1, 
+        min = 0, 
+        max = 14,
+        post = " days"
+      ),
+      bsTooltip(
+        "reldays", 
+        "Days it takes to release a false positive from isolation",
         placement = "bottom", 
         trigger = "hover"
       ),
