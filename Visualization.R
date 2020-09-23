@@ -196,7 +196,7 @@ dashboardChartingFunction <- function(chartData, chartParameters, annotations = 
     add_trace(y = ~allRecovered, name = "Recovered", line = list( color = clrs1[[2]])) %>%
     add_trace(y = ~bedsUsed, name = "Beds Used", line = list( color = clrs1[[3]])) %>% 
     layout(yaxis = list(title = yaxisString, range = yRangeTraj), xaxis = list(title = "Day", range = xRange), legend = list(x = 0, y = 1.2, orientation = 'h'),
-           annotations = maxInfAnnotation, font = list(size = 9)) 
+           annotations = maxInfAnnotation, font = list(size = 11), showlegend = FALSE) 
   
   
   
@@ -207,11 +207,12 @@ dashboardChartingFunction <- function(chartData, chartParameters, annotations = 
   
   trajLegends <- c("Infected", "Recovered", "Beds Used")
   n <- length(trajLegends)
-  y_annotation <- seq(1, 1-n*.018, length.out = n)
+  y_annotation <- seq(1, 1-n*.022, length.out = n)
   
   for(i in 1:n){
     trajectoryChart <- trajectoryChart %>%
-      add_annotations( text = trajLegends[i], font = list(color = clrs1[i]), x = .05, y = y_annotation[i], xref = "paper", yref = "paper", showarrow = FALSE, xanchor = 'left')
+      add_annotations( text = trajLegends[i], font = list(color = clrs1[i], size = 11), x = .05, y = y_annotation[i],
+                       xref = "paper", yref = "paper", showarrow = FALSE, xanchor = 'left')
     
   }
   

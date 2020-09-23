@@ -126,7 +126,7 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
   br(),
   introBox(data.step = 3, data.intro = "Compute button",
            div(style="display:inline-block",
-               submitButton("Compute",
+               submitButton("Recompute",
                             icon("play-circle")
                )
                # bsButton(inputId = "compute",
@@ -144,7 +144,7 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
            div(style="display:inline-block",
                downloadButton(
                  outputId = "downloadData",
-                 label = "Get PDF Report",
+                 label = "Get Detailed Report",
                  icon = icon("download"),
                  style = "color: black; margin-left: 10px;"
                ))
@@ -438,24 +438,24 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
   dashboardBody(
     dashboardTheme,
     fluidRow(
-    tags$div(tags$body(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Compute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing)."))
+    tags$div(tags$body(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing)."))
     ),
     fluidRow(
       box(width=15, plotlyOutput('plot'))),
     fluidRow(
-      box(width=15, DT::dataTableOutput("tabledata"))),
-    fluidRow(
-      tags$div(tags$body(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics.")),
-      tags$div(tags$body(
-        "Dashboard by Olivia Fu,",
-        tags$a(href="gking.harvard.edu", "Gary King,"),
-        tags$a(href="https://projects.iq.harvard.edu/zmukerjee", "Zagreb Mukerjee."),
-        "Based on",
-        tags$a(href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2768923", "this paper."),
-        "For more information, see",
-        tags$a(href="brokenlink", "here.")
-      ))
-    )
+      box(width=15, DT::dataTableOutput("tabledata")))#,
+    # fluidRow(
+    #   tags$div(tags$body(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics.")),
+    #   tags$div(tags$body(
+    #     "Dashboard by Olivia Fu,",
+    #     tags$a(href="gking.harvard.edu", "Gary King,"),
+    #     tags$a(href="https://projects.iq.harvard.edu/zmukerjee", "Zagreb Mukerjee."),
+    #     "Based on",
+    #     tags$a(href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2768923", "this paper."),
+    #     "For more information, see",
+    #     tags$a(href="brokenlink", "here.")
+    #   ))
+    # )
    
     
   )
