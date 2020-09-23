@@ -1,12 +1,12 @@
 dashboardLogo <- shinyDashboardLogoDIY(
   
-  boldText = "Campus Covid-19 Model"
+  boldText = "CovidU"
   ,mainText = "by Harvard IQSS"
   ,textSize = 20
   ,badgeText = "v.1"
   ,badgeTextColor = "white"
   ,badgeTextSize = 2
-  ,badgeBackColor = "#40E0D0"
+  ,badgeBackColor = "#aaaaaa"
   ,badgeBorderRadius = 2
   
 )
@@ -114,7 +114,7 @@ dashboardTheme <- shinyDashboardThemeDIY(
   
 )
 
-ui <- dashboardPage(title="Campus Covid-19 Model",
+ui <- dashboardPage(title="CovidU",
   
   dashboardHeader(
     title = dashboardLogo,
