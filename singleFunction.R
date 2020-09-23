@@ -19,7 +19,10 @@ campusSIRFunction <- function(
     testConfCost,
     falsePositiveReturnTime,
     podSizeInput,
-    podInfectionProbInput
+    podInfectionProbInput,
+    partyRateInput,
+    partySizeInput,
+    partyContactsInput
   ){
    
   
@@ -53,6 +56,8 @@ campusSIRFunction <- function(
     for(scenarioNumber in 1:nrow(scenariosToRun)){
       tic()
       
+      # Overwrite default inputs with inputs from user
+      
       # go from r0 to # contacts
       recoveryRate <- 1/14
       symptomOnsetRate <- recoveryRate*(.3/(1-.3))
@@ -78,6 +83,11 @@ campusSIRFunction <- function(
 
       scenariosToRun[scenarioNumber, ]$podSize <- podSizeInput
       scenariosToRun[scenarioNumber, ]$intraPodInfectionProb <- podInfectionProbInput/100
+      scenariosToRun[scenarioNumber, ]$partyRate <- partyRateInput
+      scenariosToRun[scenarioNumber, ]$partySize <- partySizeInput
+      scenariosToRun[scenarioNumber, ]$contactsPerParty <- partyContactsInput
+      
+      if(partyRateInput > 0){scenariosToRun[scenarioNumber, ]$parties <- TRUE} else {scenariosToRun[scenarioNumber, ]$parties <- FALSE}
       
       testParameters <- parameterSetupFunction(scenarioNumber, scenariosToRun)
       

@@ -126,7 +126,7 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
   br(),
   introBox(data.step = 3, data.intro = "Compute button",
            div(style="display:inline-block",
-               submitButton("COMPUTE",
+               submitButton("Compute",
                             icon("play-circle")
                )
                # bsButton(inputId = "compute",
@@ -144,7 +144,7 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
            div(style="display:inline-block",
                downloadButton(
                  outputId = "downloadData",
-                 label = "GET PDF REPORT",
+                 label = "Get PDF Report",
                  icon = icon("download"),
                  style = "color: black; margin-left: 10px;"
                ))
@@ -154,7 +154,7 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
     menuItem(
       "Basic Assumptions",
       tabName = "assumptions",
-      icon = icon("clipboard-list"),
+      icon = icon("chart-area"),
       startExpanded = TRUE,
       sliderInput(
         inputId = "r0", 
@@ -170,6 +170,39 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
         placement = "bottom", 
         trigger = "hover"
       ),
+     sliderInput(
+        inputId = "comm", 
+        label = "External Infections Per Day",
+        value = 0.5, 
+        min = 0, 
+        max = 5, 
+        step = 0.5
+      ),
+      bsTooltip(
+        "comm", 
+        "External infections are those coming from outside campus",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      sliderInput(
+        inputId = "asymp", 
+        label = "Starting Asymptomatic Cases",
+        value = 3, 
+        min = 0, 
+        max = 26
+      ),
+      bsTooltip(
+        "asymp", 
+        "The number of people arriving on campus carrying Covid without symptoms",
+        placement = "bottom", 
+        trigger = "hover"
+      )
+    ),
+    
+    menuItem(
+      "Testing and  Costs",
+      tabName = "costs",
+      icon = icon("clipboard-list"),
       sliderInput(
         inputId = "sens", 
         label = "Test Sensitivity",
@@ -213,32 +246,36 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
         trigger = "hover"
       ),
       sliderInput(
-        inputId = "comm", 
-        label = "External Infections Per Day",
-        value = 0.5, 
+        inputId = "cost", 
+        label = "Cost per Test",
+        value = 25, 
         min = 0, 
-        max = 5, 
-        step = 0.5
+        max = 100, 
+        step = 5,
+        pre = "$"
       ),
       bsTooltip(
-        "comm", 
-        "External infections are those coming from outside campus",
+        "cost", 
+        "Cost of administering a PCR test",
         placement = "bottom", 
         trigger = "hover"
       ),
       sliderInput(
-        inputId = "asymp", 
-        label = "Starting Asymptomatic Cases",
-        value = 3, 
+        inputId = "confcost", 
+        label = "Confirmatory Test Cost",
+        value = 50, 
         min = 0, 
-        max = 26
+        max = 200, 
+        step = 10,
+        pre = "$"
       ),
       bsTooltip(
-        "asymp", 
-        "The number of people arriving on campus carrying Covid without symptoms",
+        "confcost", 
+        "Cost of testing administered on entering isolation",
         placement = "bottom", 
         trigger = "hover"
       )
+      
     ),
     
     menuItem(
@@ -267,7 +304,7 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
         step = 1
       ),
       bsTooltip(
-        "podSize", 
+        "podSizeInput", 
         "Number of students living together on average (sharing a bathroom)",
         placement = "bottom", 
         trigger = "hover"
@@ -282,14 +319,55 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
         post = "%"
       ),
       bsTooltip(
-        "podInfRate", 
+        "podInfectionProbInput", 
         "Cumulative probability that a sick roommate infects a healthy one",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      sliderInput(
+        inputId = "partyRateInput", 
+        label = "Frequency of Social Gatherings",
+        value = 0, 
+        min = 0, 
+        max = 14, 
+        step = 1
+      ),
+      bsTooltip(
+        "partyRateInput", 
+        "0 = no gatherings; 1 = daily gatherings; 2 = gatherings every other day; etc.",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      numericInput(
+        inputId = "partySizeInput", 
+        label = "Number of Students Attending Social Gatherings",
+        value = 500,
+        min = 0,
+        max = 100000
+      ),
+      bsTooltip(
+        "partySizeInput", 
+        "How many students go to social gatherings",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      sliderInput(
+        inputId = "partyContactsInput", 
+        label = "Number of contacts at Social Gatherings",
+        value = 20, 
+        min = 0, 
+        max = 50, 
+        step = 1
+      ),
+      bsTooltip(
+        "partyContactsInput", 
+        "Average number of contacts made in a social gathering (1 contact = 15 minutes indoors, unmasked)",
         placement = "bottom", 
         trigger = "hover"
       )
       
     ),
-    
+
     menuItem(
       "More Assumptions",
       tabName = "advanced",
@@ -340,53 +418,9 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
         trigger = "hover"
       ),
       sliderInput(
-        inputId = "cost", 
-        label = "Cost per Test",
-        value = 25, 
-        min = 0, 
-        max = 100, 
-        step = 5,
-        pre = "$"
-      ),
-      bsTooltip(
-        "cost", 
-        "Cost of administering a PCR test",
-        placement = "bottom", 
-        trigger = "hover"
-      ),
-      sliderInput(
-        inputId = "confcost", 
-        label = "Confirmatory Test Cost",
-        value = 50, 
-        min = 0, 
-        max = 200, 
-        step = 10,
-        pre = "$"
-      ),
-      bsTooltip(
-        "confcost", 
-        "Cost of testing administered on entering isolation",
-        placement = "bottom", 
-        trigger = "hover"
-      ),
-      sliderInput(
         inputId = "reldays", 
-        label = "False Positive release time",
-        value = 1, 
-        min = 0, 
-        max = 14,
-        post = " days"
-      ),
-      bsTooltip(
-        "reldays", 
-        "Days it takes to release a false positive from isolation",
-        placement = "bottom", 
-        trigger = "hover"
-      ),
-      sliderInput(
-        inputId = "reldays", 
-        label = "False Positive release time",
-        value = 1, 
+        label = "False Positive Release Time",
+        value = 2, 
         min = 0, 
         max = 14,
         post = " days"
@@ -404,6 +438,8 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
   dashboardBody(
     dashboardTheme,
     fluidRow(
+      tags$div(tags$body(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics.")),
+      tags$div(tags$body(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Compute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing).")),
       tags$div(tags$body(
         "Dashboard by Olivia Fu,",
         tags$a(href="gking.harvard.edu", "Gary King,"),
@@ -411,10 +447,8 @@ ui <- dashboardPage(title="Campus Covid-19 Model",
         "Based on",
         tags$a(href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2768923", "this paper."),
         "For more information, see",
-        tags$a(href="brokenlink", "here."),
-        
-      )),
-      tags$div(tags$body("This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."))
+        tags$a(href="brokenlink", "here.")
+      ))
       
     ),
     fluidRow(

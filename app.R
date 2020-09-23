@@ -35,7 +35,11 @@ server <- function(input, output, session){
          testConfCost = input$confcost,
          falsePositiveReturnTime = input$reldays,
          podSizeInput = input$podSizeInput,
-         podInfectionProbInput = input$podInfectionProbInput
+         podInfectionProbInput = input$podInfectionProbInput,
+         partyRateInput = input$partyRateInput,
+         partySizeInput = input$partySizeInput,
+         partyContactsInput = input$partyContactsInput
+         
       )})
    
    output$plot <- renderPlotly(

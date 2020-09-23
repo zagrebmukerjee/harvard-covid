@@ -32,6 +32,7 @@ exogConstantShockFunction <- function(cycle, shockRate, shockSize){
 
 partyFunction <- function(cycle, partyRate, partySize){
   # Deterministic shock every shockRate days
+  if(partyRate == 0){return(0)}
   if(((cycle %% partyRate) == 0)&&(cycle != 0)){
     return(partySize)
   } else { return(0)}
@@ -93,7 +94,7 @@ parameterSetupFunction <- function(scenarioNumber, testMatrix){
     exogeneousShockRate =  testSubset$exogeneousShockRate,  # how often (in days) new infections are added  - every nth cycle
     exogeneousShockSize = testSubset$exogeneousShockSize, # how many new infections added each time
     partyRate =  testSubset$partyRate,
-    partySize = testSubset$partySize, 
+    partySize = testSubset$partySize,
     contactsPerParty = testSubset$contactsPerParty,
     
     testPCRSpecificity = testSubset$testPCRSpecificity, # 1 - false positive rate for PCR
