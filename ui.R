@@ -438,24 +438,24 @@ ui <- dashboardPage(title="CovidU",
   dashboardBody(
     dashboardTheme,
     fluidRow(
-    tags$div(tags$body(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing)."))
+    tags$div(tags$body(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing). Computation will take some time."))
     ),
     fluidRow(
       box(width=15, plotlyOutput('plot'))),
     fluidRow(
-      box(width=15, DT::dataTableOutput("tabledata")))#,
-    # fluidRow(
-    #   tags$div(tags$body(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics.")),
-    #   tags$div(tags$body(
-    #     "Dashboard by Olivia Fu,",
-    #     tags$a(href="gking.harvard.edu", "Gary King,"),
-    #     tags$a(href="https://projects.iq.harvard.edu/zmukerjee", "Zagreb Mukerjee."),
-    #     "Based on",
-    #     tags$a(href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2768923", "this paper."),
-    #     "For more information, see",
-    #     tags$a(href="brokenlink", "here.")
-    #   ))
-    # )
+      box(width=15, DT::dataTableOutput("tabledata"))),
+    fluidRow(
+      tags$div(tags$body(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."))#,
+      # tags$div(tags$body(
+      #   "Dashboard by Olivia Fu,",
+      #   tags$a(href="gking.harvard.edu", "Gary King,"),
+      #   tags$a(href="https://projects.iq.harvard.edu/zmukerjee", "Zagreb Mukerjee."),
+      #   "Based on",
+      #   tags$a(href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2768923", "this paper."),
+      #   "For more information, see",
+      #   tags$a(href="brokenlink", "here.")
+      # ))
+    )
    
     
   )

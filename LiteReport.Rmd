@@ -21,7 +21,6 @@ output:
   pdf_document: 
     extra_dependencies: ["float","booktabs" ]
 params:
-  spec: NA
   table: NA
   ggCharts: NA
   paramTable: NA
