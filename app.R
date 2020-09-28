@@ -59,30 +59,6 @@ server <- function(input, output, session){
       filename = function(){"modelReport.pdf"},
       content = function(file){
          
-         funList2 <- reactive({
-            campusSIRFunction(
-               r0 = input$r0,
-               testPCRSpecificity = input$spec,
-               testPCRSensitivity = input$sens,
-               testingTime = input$cad,
-               commInf = input$comm,
-               startingAsymptomatics = input$asymp, 
-               studentPopulation = input$pop,
-               conditionalInfectionProb = input$infectprob,
-               totalDays = input$days,
-               symptomDevelopmentProportion = input$devsymp,
-               testingCost = input$cost,
-               testConfCost = input$confcost,
-               falsePositiveReturnTime = input$reldays,
-               podSizeInput = input$podSizeInput,
-               podInfectionProbInput = input$podInfectionProbInput,
-               partyRateInput = input$partyRateInput,
-               partySizeInput = input$partySizeInput,
-               partyContactsInput = input$partyContactsInput
-               
-            )})
-         
-         
          tempReport <- file.path(tempdir(), "LiteReport.Rmd")
          file.copy("LiteReport.Rmd", tempReport, overwrite = TRUE)
          
