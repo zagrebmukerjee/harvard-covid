@@ -63,7 +63,7 @@ server <- function(input, output, session){
          file.copy("LiteReport.Rmd", tempReport, overwrite = TRUE)
          
          # Set up parameters to pass to Rmd document
-         params <- list(table = funList2()$table, ggCharts = funList2()$reportCharts, paramTable = funList2()$paramTable)
+         params <- list(table = funList()$table, ggCharts = funList()$reportCharts, paramTable = funList()$paramTable)
          
          # Knit the document, passing in the `params` list, and eval it in a
          # child of the global environment (this isolates the code in the document
