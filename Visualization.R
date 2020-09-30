@@ -207,7 +207,7 @@ dashboardChartingFunction <- function(chartData, chartParameters, annotations = 
   
   trajLegends <- c("Infected", "Recovered", "Beds Used")
   n <- length(trajLegends)
-  y_annotation <- seq(1, 1-n*.022, length.out = n)
+  y_annotation <- seq(1, 1-n*.024, length.out = n)
   
   for(i in 1:n){
     trajectoryChart <- trajectoryChart %>%

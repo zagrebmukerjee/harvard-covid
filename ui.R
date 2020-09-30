@@ -427,7 +427,8 @@ ui <- dashboardPage(title="CovidU",
   
   dashboardBody(
     dashboardTheme,
-    tags$header(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing)."),
+    tags$header(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing). "),
+    tags$header("You can also download a detailed PDF report on your chosen scenario."),
     fluidRow(
       box(width=15, plotlyOutput('plot'))),
     fluidRow(
