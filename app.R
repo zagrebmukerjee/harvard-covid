@@ -93,7 +93,9 @@ server <- function(input, output, session){
             podInfectionProbInput = input$podInfectionProbInput,
             partyRateInput = input$partyRateInput,
             partySizeInput = input$partySizeInput,
-            partyContactsInput = input$partyContactsInput)})
+            partyContactsInput = input$partyContactsInput,
+            ssDateInput = input$ssDate,
+            ssSizeInput = input$ssSize)})
          
          
          # Set up parameters to pass to Rmd document
