@@ -19,28 +19,32 @@ server <- function(input, output, session){
    
    session$allowReconnect("force") # this will stop it going grey, we hope
    
-   funList <- reactive({
-      campusSIRFunction(
-         r0 = input$r0,
-         testPCRSpecificity = input$spec,
-         testPCRSensitivity = input$sens,
-         testingTime = input$cad,
-         commInf = input$comm,
-         startingAsymptomatics = input$asymp, 
-         studentPopulation = input$pop,
-         conditionalInfectionProb = input$infectprob,
-         totalDays = input$days,
-         symptomDevelopmentProportion = input$devsymp,
-         testingCost = input$cost,
-         testConfCost = input$confcost,
-         falsePositiveReturnTime = input$reldays,
-         podSizeInput = input$podSizeInput,
-         podInfectionProbInput = input$podInfectionProbInput,
-         partyRateInput = input$partyRateInput,
-         partySizeInput = input$partySizeInput,
-         partyContactsInput = input$partyContactsInput
-         
-      )})
+   # update party slider based on pop
+   observeEvent(input$pop, {updateSliderInput(session, "partySizeInput", max  = input$pop)},
+                ignoreNULL = FALSE)
+   
+   
+   funList <- eventReactive(eventExpr = input$recomputeButton, 
+                            valueExpr = {campusSIRFunction(
+                                  r0 = input$r0,
+                                  testPCRSpecificity = input$spec,
+                                  testPCRSensitivity = input$sens,
+                                  testingTime = input$cad,
+                                  commInf = input$comm,
+                                  startingAsymptomatics = input$asymp,
+                                  studentPopulation = input$pop,
+                                  conditionalInfectionProb = input$infectprob,
+                                  totalDays = input$days,
+                                  symptomDevelopmentProportion = input$devsymp,
+                                  testingCost = input$cost,
+                                  testConfCost = input$confcost,
+                                  falsePositiveReturnTime = input$reldays,
+                                  podSizeInput = input$podSizeInput,
+                                  podInfectionProbInput = input$podInfectionProbInput,
+                                  partyRateInput = input$partyRateInput,
+                                  partySizeInput = input$partySizeInput,
+                                  partyContactsInput = input$partyContactsInput)},
+                            ignoreNULL = FALSE)
    
    output$plot <- renderPlotly(
       funList()$chart
@@ -61,6 +65,27 @@ server <- function(input, output, session){
          
          tempReport <- file.path(tempdir(), "LiteReport.Rmd")
          file.copy("LiteReport.Rmd", tempReport, overwrite = TRUE)
+         
+         funList <- reactive({campusSIRFunction(
+            r0 = input$r0,
+            testPCRSpecificity = input$spec,
+            testPCRSensitivity = input$sens,
+            testingTime = input$cad,
+            commInf = input$comm,
+            startingAsymptomatics = input$asymp,
+            studentPopulation = input$pop,
+            conditionalInfectionProb = input$infectprob,
+            totalDays = input$days,
+            symptomDevelopmentProportion = input$devsymp,
+            testingCost = input$cost,
+            testConfCost = input$confcost,
+            falsePositiveReturnTime = input$reldays,
+            podSizeInput = input$podSizeInput,
+            podInfectionProbInput = input$podInfectionProbInput,
+            partyRateInput = input$partyRateInput,
+            partySizeInput = input$partySizeInput,
+            partyContactsInput = input$partyContactsInput)})
+         
          
          # Set up parameters to pass to Rmd document
          params <- list(table = funList()$table, ggCharts = funList()$reportCharts, paramTable = funList()$paramTable)

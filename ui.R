@@ -126,8 +126,9 @@ ui <- dashboardPage(title="CovidU",
   br(),
   introBox(data.step = 3, data.intro = "Compute button",
            div(style="display:inline-block",
-               submitButton("Recompute",
-                            icon("play-circle")
+               actionButton(inputId = "recomputeButton",
+                 label = "Recompute",
+                 icon("play-circle")
                )
 
            ),
@@ -328,12 +329,12 @@ ui <- dashboardPage(title="CovidU",
         placement = "bottom", 
         trigger = "hover"
       ),
-      numericInput(
+      sliderInput(
         inputId = "partySizeInput", 
         label = "Number of Students Attending Social Gatherings",
         value = 500,
         min = 0,
-        max = 100000
+        max = 1500
       ),
       bsTooltip(
         "partySizeInput", 
