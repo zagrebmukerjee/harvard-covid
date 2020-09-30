@@ -22,7 +22,9 @@ campusSIRFunction <- function(
     podInfectionProbInput,
     partyRateInput,
     partySizeInput,
-    partyContactsInput
+    partyContactsInput,
+    ssDateInput,
+    ssSizeInput
   ){
    
   
@@ -87,6 +89,10 @@ campusSIRFunction <- function(
       scenariosToRun[scenarioNumber, ]$partySize <- partySizeInput
       scenariosToRun[scenarioNumber, ]$contactsPerParty <- partyContactsInput
       
+      scenariosToRun[scenarioNumber, ]$ssEventDate <- ssDateInput
+      scenariosToRun[scenarioNumber, ]$ssEventSize <- ssSizeInput
+      
+      
       if(partyRateInput > 0){scenariosToRun[scenarioNumber, ]$parties <- TRUE} else {scenariosToRun[scenarioNumber, ]$parties <- FALSE}
       
       testParameters <- parameterSetupFunction(scenarioNumber, scenariosToRun)
@@ -99,6 +105,7 @@ campusSIRFunction <- function(
         timeInvariants = testParameters$timeInvariantParams,
         exoShockFun = testParameters$exogeneousShockFunction,
         partyFun = testParameters$partyFunction,
+        ssFun = testParameters$superSpreaderFunction,
         mechanics = testParameters$mechanicsParameters)
       
       outputData <- modelOutputs$outputData

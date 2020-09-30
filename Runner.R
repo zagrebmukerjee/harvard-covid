@@ -11,8 +11,6 @@ source("contactMatrixTransmission.R")
 source("contactTracing.R")
 source("Model.R")
 
-## ODE Runner
-source("OdeModel.R")
 
 # load parameter setup functions
 source("ParameterSetup.R")
@@ -46,6 +44,7 @@ for(t in 1:nrow(testsToRun)){
       timeInvariants = testParameters$timeInvariantParams,
       exoShockFun = testParameters$exogeneousShockFunction,
       partyFun = testParameters$partyFunction,
+      ssFun = testParameters$superSpreaderFunction,
       mechanics = testParameters$mechanicsParameters)
     
     outputData <- modelOutputs$outputData
@@ -57,7 +56,7 @@ for(t in 1:nrow(testsToRun)){
     tables <- tableFunction(tableData = outputData, tableParameters = testParameters, tableDiags = diagnosticNumbers)
     
     formattedTable <- formattedResultsTableFunction(tables$keyResults)
-    formattedParameterTable <- formattedParameterTableFunction(tables$tableParams)
+    formattedParameterTable <- formattedParameterTableFunction(tables$tableParams, testParameters = testParameters)
     
     outputs <- list(
       testParameters = testParameters,

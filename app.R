@@ -23,6 +23,13 @@ server <- function(input, output, session){
    observeEvent(input$pop, {updateSliderInput(session, "partySizeInput", max  = input$pop)},
                 ignoreNULL = FALSE)
    
+   observeEvent(input$pop, {updateSliderInput(session, "ssSize", max  = input$pop/5)},
+                ignoreNULL = FALSE)
+   
+   observeEvent(input$days, {updateSliderInput(session, "ssDate", max  = input$days)},
+                ignoreNULL = FALSE)
+   
+   
    
    funList <- eventReactive(eventExpr = input$recomputeButton, 
                             valueExpr = {campusSIRFunction(
@@ -43,7 +50,9 @@ server <- function(input, output, session){
                                   podInfectionProbInput = input$podInfectionProbInput,
                                   partyRateInput = input$partyRateInput,
                                   partySizeInput = input$partySizeInput,
-                                  partyContactsInput = input$partyContactsInput)},
+                                  partyContactsInput = input$partyContactsInput,
+                                  ssDateInput = input$ssDate,
+                                  ssSizeInput = input$ssSize)},
                             ignoreNULL = FALSE)
    
    output$plot <- renderPlotly(

@@ -187,7 +187,33 @@ ui <- dashboardPage(title="CovidU",
         "The number of people arriving on campus carrying Covid without symptoms",
         placement = "bottom", 
         trigger = "hover"
-      )
+      ),
+     sliderInput(
+       inputId = "ssDate", 
+       label = "Superspreader Event Date",
+       value = 0, 
+       min = 0, 
+       max = 80
+     ),
+     bsTooltip(
+       "asymp", 
+       "Date on which a superspreader event occurs (0 disables)",
+       placement = "bottom", 
+       trigger = "hover"
+     ),
+     sliderInput(
+       inputId = "ssSize", 
+       label = "Superspreader Event Size",
+       value = 0, 
+       min = 0, 
+       max = 500
+     ),
+     bsTooltip(
+       "asymp", 
+       "Size of a superspreader event if one occurs (0 disables). Capped at 20 percent of total population",
+       placement = "bottom", 
+       trigger = "hover"
+     )
     ),
     
     menuItem(

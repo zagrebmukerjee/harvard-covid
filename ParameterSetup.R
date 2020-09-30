@@ -38,6 +38,15 @@ partyFunction <- function(cycle, partyRate, partySize){
   } else { return(0)}
 }
 
+
+
+superSpreaderFunction <- function(cycle, ssEventDate, ssEventSize ){
+  # Deterministic shock every shockRate days
+  if(ssEventDate == 0){return(0)}
+  if((cycle == ssEventDate)&&(cycle != 0)){
+    return(ssEventSize)
+  } else { return(0)}
+}
 ###########################################
 ## Collect parameters and specialize shock function
 ###########################################
@@ -93,6 +102,8 @@ parameterSetupFunction <- function(scenarioNumber, testMatrix){
     conditionalMortality = testSubset$conditionalMortality, # as a percentage rate, conditional on symptomatic - .0005 cond. on symptomatic
     exogeneousShockRate =  testSubset$exogeneousShockRate,  # how often (in days) new infections are added  - every nth cycle
     exogeneousShockSize = testSubset$exogeneousShockSize, # how many new infections added each time
+    ssEventDate = testSubset$ssEventDate,
+    ssEventSize = testSubset$ssEventSize,
     partyRate =  testSubset$partyRate,
     partySize = testSubset$partySize,
     contactsPerParty = testSubset$contactsPerParty,
@@ -142,6 +153,7 @@ parameterSetupFunction <- function(scenarioNumber, testMatrix){
   timeInvariantParams$recoveryTimeCycles <- timeInvariantParams$recoveryTime * testSubset$cyclesPerDay
   timeInvariantParams$incubationTimeCycles <- timeInvariantParams$incubationTime * testSubset$cyclesPerDay
   timeInvariantParams$exogeneousShockRate <- timeInvariantParams$exogeneousShockRate * testSubset$cyclesPerDay
+  timeInvariantParams$ssEventDate <- timeInvariantParams$ssEventDate * testSubset$cyclesPerDay
   timeInvariantParams$partyRate <- timeInvariantParams$partyRate * testSubset$cyclesPerDay
   timeInvariantParams$falsePositiveReturnTime <- timeInvariantParams$falsePositiveReturnTime * testSubset$cyclesPerDay
   timeInvariantParams$testingTime <- timeInvariantParams$testingTime * testSubset$cyclesPerDay
@@ -182,7 +194,7 @@ parameterSetupFunction <- function(scenarioNumber, testMatrix){
   # takes cycle and returns size of exogeneous shock on that day - how many new asymptomatic
 
 
-  modelshockFun = function(cycle) exogeneousShockFunction(cycle,
+  modelshockFun <- function(cycle) exogeneousShockFunction(cycle,
           shockRate=timeInvariantParams$exogeneousShockRate,
           shockSize=timeInvariantParams$exogeneousShockSize)
   
@@ -190,10 +202,15 @@ parameterSetupFunction <- function(scenarioNumber, testMatrix){
                                                  partyRate = timeInvariantParams$partyRate,
                                                  partySize = timeInvariantParams$partySize)
   
+  modelSSFun <- function(cycle) superSpreaderFunction(cycle = cycle, 
+                                                      ssEventDate = timeInvariantParams$ssEventDate,
+                                                      ssEventSize = timeInvariantParams$ssEventSize)
+  
   return(list(stateParams = stateParams,
               timeInvariantParams = timeInvariantParams, 
               exogeneousShockFunction = modelshockFun,
               partyFunction = modelPartyFun,
+              superSpreaderFunction = modelSSFun,
               mechanicsParameters = mechanicsParameters, 
               modelParameters = modelParameters))
   

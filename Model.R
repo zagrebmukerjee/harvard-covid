@@ -35,7 +35,7 @@ serologySetupFunction <- function(states, invariants){
 nonIsolatedPopFunction <- function(state){(state$susceptible + state$exposed + state$asymptomatic) }
 
 
-evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyFun, stateNameVec, initializing){
+evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyFun, ssFun, stateNameVec, initializing){
 
   # states <- stateDataFrame
   # invariants <- timeInvariants
@@ -50,6 +50,7 @@ evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyF
   
   # get shock for this cycle:
   exoShockValue <- exoShockFun(oldState$cycle + 1)
+  superSpreaderValue <- ssFun(oldState$cycle + 1)
   if(invariants$parties) {partyValue <- partyFun(oldState$cycle + 1)} else {partyValue <- 0}
   
   
@@ -63,7 +64,7 @@ evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyF
   contactMatrixTransmissionValue <- contactMatrixTransmission(invariants, partyValue)
   
   # print(testParameters$timeInvariantParams$asymptomaticTransRate - contactMatrixTransmissionValue)
-  stateTransferMatrix["susceptible","exposed"] <- - (contactMatrixTransmissionValue*(asymptomaticShareOfNonIsolated))* oldState$susceptible  - exoShockValue
+  stateTransferMatrix["susceptible","exposed"] <- - (contactMatrixTransmissionValue*(asymptomaticShareOfNonIsolated))* oldState$susceptible  - exoShockValue - superSpreaderValue
   stateTransferMatrix["susceptible","falsePositives"] <- if(initializing){0} else {
     - (1- invariants$testPCRSpecificity)/invariants$testingTime * previousOldState$susceptible + # new FPs
       invariants$falsePositiveReturnRate * oldState$falsePositives } # old FPs returning
@@ -204,7 +205,7 @@ evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyF
 
 
 
-modelRunner <- function(initialState, timeInvariants, exoShockFun, partyFun, mechanics){
+modelRunner <- function(initialState, timeInvariants, exoShockFun, partyFun, ssFunction, mechanics){
 
   # initialState <- testParameters$stateParams
   # timeInvariants <- testParameters$timeInvariantParams
@@ -222,7 +223,7 @@ modelRunner <- function(initialState, timeInvariants, exoShockFun, partyFun, mec
   while (max(stateDataFrame$cycle) < timeInvariants$firstTestDelay){
     
     
-    step <- evolutionFunction(stateDataFrame, timeInvariants, mechanics, exoShockFun, partyFun, stateNames, initializing = TRUE)
+    step <- evolutionFunction(stateDataFrame, timeInvariants, mechanics, exoShockFun, partyFun, ssFunction, stateNames, initializing = TRUE)
     diagnosticMatrix[[max(stateDataFrame$cycle)+1]] <- step$stateTransferMatrixClean
     diagnosticNumbers[[max(stateDataFrame$cycle)+1]] <- step$diagNumbers
     stateDataFrame <- bind_rows(stateDataFrame, step$newState )
@@ -231,7 +232,7 @@ modelRunner <- function(initialState, timeInvariants, exoShockFun, partyFun, mec
   
   while (max(stateDataFrame$cycle) < mechanics$nCycles){
     
-    step <- evolutionFunction(stateDataFrame, timeInvariants, mechanics, exoShockFun, partyFun, stateNames, initializing = FALSE)
+    step <- evolutionFunction(stateDataFrame, timeInvariants, mechanics, exoShockFun, partyFun, ssFunction, stateNames, initializing = FALSE)
     diagnosticMatrix[[max(stateDataFrame$cycle)+1]] <- step$stateTransferMatrixClean
     diagnosticNumbers[[max(stateDataFrame$cycle)+1]] <- step$diagNumbers
     stateDataFrame <- bind_rows(stateDataFrame, step$newState )
