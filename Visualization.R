@@ -138,11 +138,11 @@ ggPlotChartingFunction <- function(chartData, chartParameters, annotations = TRU
     trajectoryGGPlot <- trajectoryGGPlot + annotate(
       geom = "segment",
       xend = maxInf$day, x = maxInf$day - 10,
-      yend = maxInf$infected, y = maxInf$infected + yRangeTraj[[2]]/20,
+      yend = maxInf$infected, y = maxInf$infected - yRangeTraj[[2]]/20,
       size = .5, arrow = arrow(angle = 30, length = unit(.1, "inches"))
     ) + annotate(
       geom = "text",
-      x = maxInf$day - 10, y = maxInf$infected + 1.4*yRangeTraj[[2]]/20,
+      x = maxInf$day - 10, y = maxInf$infected - 1.4*yRangeTraj[[2]]/20,
       label = maxInfAnnotation$text, size = 2.5
     )
     

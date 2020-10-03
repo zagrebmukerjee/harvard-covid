@@ -32,7 +32,7 @@ options(knitr.table.format = "latex")
 
 ```
 
-## Subcommittee for Evidence-Based Decision Making (of the Committee for Testing and Tracing, Harvard University) ^[Contact: Gary King <king@harvard.edu>, Zagreb Mukerjee <zagrebmukerjee@fas.harvard.edu>] 
+## CovidU: Detailed Report ^[Contact: Gary King <king@harvard.edu>, Zagreb Mukerjee <zagrebmukerjee@fas.harvard.edu>] 
 
 ### Summary Report
 

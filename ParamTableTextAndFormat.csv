@@ -24,7 +24,7 @@ Confirmatory Test Cost ($),Currently assuming 100% sens/spec,test,%0.0f$,more,le
 Isolation Exit Rate (days),Days for False Positive to be released (assumes accurate confirmatory testing),pol,%0.0f,more,fewer,%0.0f,,day(s) to screen out false positives,
 Testing Frequency (days),Interval between tests,pol,%0.0f,more,fewer,%0.0f,,day(s) between tests,
 Test-Isolation Delay (Hours),Hours it takes to quarantine someone testing positive,noshow,%0.0f,more,fewer,%0.0f,,hours to isolation from a positive test,
-Days before first round of isolations,,pol,%0.0f,more,fewer,%0.0f,,day(s) before the first round of isolation,
+Days before first round of isolations,,noshow,%0.0f,more,fewer,%0.0f,,day(s) before the first round of isolation,
 Student Population,,pol,%0.0f,more,fewer,%0.0f,,students,
 Housing Pod Size,Number of Students Living Together,pol,%0.0f,more,fewer,%0.0f,,,pod size
 Max Contacts Traced,Number of Contacts Traceable in a day,contrace,%0.0f,more,fewer,%0.0f,,max contacts traced per day,
