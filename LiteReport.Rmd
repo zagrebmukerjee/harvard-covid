@@ -30,6 +30,10 @@ params:
 
 options(knitr.table.format = "latex")
 
+defaultW <- getOption("warn") 
+options(warn = -1)
+
+
 ```
 
 ## CovidU: Detailed Report ^[Contact: Gary King <king@harvard.edu>, Zagreb Mukerjee <zagrebmukerjee@fas.harvard.edu>] 
@@ -64,3 +68,10 @@ params$paramTable$polTable%>% kable(align = "lcr", row.names = FALSE, col.names 
 grid.arrange(params$ggCharts$trajectoryGGPlot, params$ggCharts$occupancyGGPlot, ncol = 2)
 ```
 
+
+
+```{r end, include = FALSE}
+
+options(warn = defaultW)
+
+```
