@@ -134,8 +134,9 @@ parameterSetupFunction <- function(scenarioNumber, testMatrix){
     runContactTracing = testSubset$runContactTracing,
     runSerologyTest = testSubset$runSerologyTest,
     pooledTests = testSubset$pooledTests,
-    parties = testSubset$parties
-    
+    parties = testSubset$parties,
+    startingAsymptomatics = testSubset$startingAsymptomatics,
+    nDays = testSubset$nCycles/testSubset$cyclesPerDay  
     
   )
   

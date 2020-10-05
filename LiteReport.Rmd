@@ -40,24 +40,29 @@ options(warn = -1)
 
 ### Summary Report
 
-```{r epiParams, echo = FALSE,comment=NA,background=NA}
+```{r basicTable, echo = FALSE,comment=NA,background=NA}
   
-params$paramTable$epiTable %>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+params$paramTable$basicTable %>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
   kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
 ```
-
-**Testing Parameters**
-```{r testParams, echo = FALSE,comment=NA,background=NA}
+**Testing and Costs**
+```{r testTable, echo = FALSE,comment=NA,background=NA}
 params$paramTable$testTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
   kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
 
 ```
-
-**Policy Parameters**
-
-```{r policyParams, echo = FALSE,comment=NA,background=NA}
+**Population and Social**
+```{r popsocTable, echo = FALSE,comment=NA,background=NA}
   
-params$paramTable$polTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+params$paramTable$popsocTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+    kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+
+
+```
+**More Assumptions**
+```{r extraTable, echo = FALSE,comment=NA,background=NA}
+  
+params$paramTable$extraTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
     kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
 
 

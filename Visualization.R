@@ -227,6 +227,10 @@ dashboardChartingFunction <- function(chartData, chartParameters, annotations = 
 ########################
 
 tableFunction <- function(tableData, tableParameters, tableDiags){
+  # tableData <- outputData
+  # tableParameters <- testParameters
+  # tableDiags <- diagnosticNumbers
+  
   tableParamsRaw <- tableParameters$modelParameters
   
   
@@ -252,11 +256,11 @@ tableFunction <- function(tableData, tableParameters, tableDiags){
   # We should try to have a dictionary of the descriptions with variable names as keys,
   # instead of hardcoding the order in the table.
   
-  tableParamsRaw <- tableParamsRaw  %>%  melt() %>%  select(Name = L1, Value = value) 
+  tableParamsMelted <- tableParamsRaw  %>%  melt() %>%  select(shortName = L1, Value = value) 
   
-  tableParams <- tableStrings
-  tableParams$shortName <- tableParamsRaw$Name
-  tableParams$Value <- tableParamsRaw$Value
+  tableParams <- tableStrings %>%  left_join(tableParamsMelted, by = c("shortName"))
+  # tableParams$shortName <- tableParamsRaw$Name
+  # tableParams$Value <- tableParamsRaw$Value
   
   totalStudentsEnteringQuarantine <-  Reduce(x =  lapply(tableDiags, function(a){a$newStudentsEnteringQuarantine}), f = sum)
   totalStudentsEnteringIsolation <-  Reduce(x =  lapply(tableDiags, function(a){a$newStudentsEnteringIsolation}), f = sum)
@@ -302,12 +306,13 @@ formattedParameterTableFunction <- function(rawTableInput, testParameters){
   tableParamsToShow$Value <- mapply(function(s,f){sprintf(f,s)}, tableParamsToShow$Value, tableParamsToShow$formatString) 
   
   
-  epiTable <- tableParamsToShow %>%  filter(paramType == "epi") %>%  select(Name, Value, Notes)
+  basicTable <- tableParamsToShow %>%  filter(paramType == "basic") %>%  select(Name, Value, Notes)
   testTable <- tableParamsToShow %>%  filter(paramType == "test") %>% select(Name, Value, Notes)
-  polTable <- tableParamsToShow %>%  filter(paramType == "pol") %>% select(Name, Value, Notes)
+  popsocTable <- tableParamsToShow %>%  filter(paramType == "popsoc") %>% select(Name, Value, Notes)
+  extraTable <- tableParamsToShow %>%  filter(paramType == "extra") %>% select(Name, Value, Notes)
   
   
-  return(list(epiTable = epiTable, testTable = testTable, polTable = polTable))
+  return(list(basicTable = basicTable, testTable = testTable, popsocTable = popsocTable, extraTable = extraTable))
   
   
 }
