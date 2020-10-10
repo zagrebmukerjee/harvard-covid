@@ -1,3 +1,6 @@
+###########################################
+# LOGO
+###########################################
 dashboardLogo <- shinyDashboardLogoDIY(
   
   boldText = "CovidU"
@@ -10,6 +13,9 @@ dashboardLogo <- shinyDashboardLogoDIY(
   ,badgeBorderRadius = 2
   
 )
+###########################################
+# THEME
+###########################################
 
 dashboardTheme <- shinyDashboardThemeDIY(
   
@@ -113,6 +119,11 @@ dashboardTheme <- shinyDashboardThemeDIY(
   ,tableBorderRowSize = 1
   
 )
+
+###########################################
+# UI
+###########################################
+
 
 ui <- dashboardPage(title="CovidU",
   
