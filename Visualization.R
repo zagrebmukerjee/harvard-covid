@@ -1,79 +1,4 @@
 
-chartingFunction <- function(chartData, chartParameters, annotations = TRUE){
-
-  ########################
-  # charts
-  ########################
-  
-  if(annotations){
-  maxInf <- chartData[which.max(chartData$infected),]
-  
-  maxInfAnnotation <- list(
-    x = maxInf$day, y = maxInf$infected, text = paste0("Max Inf.: ", sprintf("%.1f", maxInf$infected)),
-    xref = "x", yref = "y", showarrow = TRUE, arrowhead = 1, ax = -40, ay = -20
-  )
-  
-  maxQuar <- chartData[which.max(chartData$bedsUsed),]
-  
-  
-  maxQuarAnnotation <- list(
-    x = maxQuar$day, y = maxQuar$bedsUsed, text = paste0("Max Quar.: ", sprintf("%.0f", maxQuar$bedsUsed)),
-    xref = "x", yref = "y", showarrow = TRUE, arrowhead = 1, ax = 50, ay = -20
-  )
-  }
-  xRange <- c(0, max(chartData$cycle/chartParameters$mechanicsParameters$cyclesPerDay))
-  yRangeTraj <- c(1.1*min(min(chartData$allRecovered),min(chartData$infected),0),
-                  1.1*max(max(chartData$allRecovered),max(chartData$infected)))
-  yRangeOcc <-c(1.1*min(chartData$bedsUsed),
-                1.1*max(chartData$bedsUsed))
-  
-  
-  ########################
-  trajectoryChart <- plot_ly(data = chartData, x = ~day, y = ~infected, name = "Infected (Symp + ASymp)", 
-                             type = "scatter", mode = "lines", line = list(color = clrs1[[1]]))  %>%
-    add_trace(y = ~allRecovered, name = "Recovered", line = list( color = clrs1[[2]])) %>% 
-    layout(yaxis = list(title = "Number of People", range = yRangeTraj), xaxis = list(title = "Day", range = xRange), legend = list(x = 0, y = 1.2, orientation = 'h'),
-           annotations = maxInfAnnotation, font = list(size = 9)) 
-  
-  
-  
-  
-  occupancyChart <- plot_ly(data = chartData, x = ~day, y = ~truePositives, name = "True Positives (Asymptomatic)",
-                            type = "scatter", mode = "none", stackgroup = "one", fillcolor = clrs2[[1]])  %>%
-    add_trace(y = ~symptomatic, name = "True Positives (Symptomatic)", fillcolor = clrs2[[2]]) %>%
-    add_trace(y = ~falsePositives, name = "False Positives", fillcolor = clrs2[[3]]) %>% 
-    add_trace(y = ~immuneFPs, name = "False Positives (Recovered)", fillcolor = clrs2[[4]]) %>% 
-    layout(yaxis = list(title = "Number of Beds", range = yRangeOcc), xaxis = list(title = "Day", range = xRange), legend = list(x =0, y = 1.2, orientation = 'h'),
-           annotations = maxQuarAnnotation, font = list(size = 9))
-  
-  ########################
-  # legends and annotations 
-  ########################
-  
-  trajLegends <- c("Infected", "Recovered")
-  occLegends <- c("True Positive (Asymp)","True Positive (Symp)","False Positive",  "False Positive (Immune)" )
-  n <- length(trajLegends)
-  n2 <- length(occLegends)
-  y_annotation <- seq(1, 1-n*.017, length.out = n)
-  y_annotation2 <- seq(0.87,1, length.out = n2)
-  
-  for(i in 1:n){
-    trajectoryChart <- trajectoryChart %>%
-      add_annotations( text = trajLegends[i], font = list(color = clrs1[i]), x = .05, y = y_annotation[i], xref = "paper", yref = "paper", showarrow = FALSE, xanchor = 'left')
-    
-  }
-  
-  for(i in 1:n2){
-    
-    occupancyChart <- occupancyChart %>%
-      add_annotations( text = occLegends[i], font = list(color = clrs2[i]), x = .7, y = y_annotation2[i], xref = "paper", yref = "paper", showarrow = FALSE, xanchor = 'left')
-    
-  }
-  
-  return(list(occupancyChart =occupancyChart, trajectoryChart = trajectoryChart))
-    
-}
-
 ggPlotChartingFunction <- function(chartData, chartParameters, annotations = TRUE){
   # chartData <- outputData
   # chartParameters <- testParameters
@@ -221,6 +146,47 @@ dashboardChartingFunction <- function(chartData, chartParameters, annotations = 
   
 }
 
+positivityChartingFunction <- function(chartData, chartDiags, chartParameters){
+  # chartData <- outputData
+  # chartParameters <- testParameters
+  # chartDiags <- diagnosticNumbers
+  # annotations <- TRUE
+  
+  chartDataArr <- chartData %>%  arrange(cycle)
+  
+  positivityTimeSeries <- data.frame(
+    cycle =chartDataArr$cycle,
+    day = chartDataArr$day,
+    testPositivity = c(NA, lapply(chartDiags, function(a){a$testPositivity}) %>%  unlist() ),
+    trueTestPositivity = c(NA, lapply(chartDiags, function(a){a$trueTestPositivity}) %>%  unlist() )
+  )
+  
+  xRange <- c(0, max(chartData$cycle/chartParameters$mechanicsParameters$cyclesPerDay))
+  yRangePos <- c(0, 1)
+  
+  positivityChart <- plot_ly(data = positivityTimeSeries, x = ~day, y = ~testPositivity, name = "Test Positivity", 
+                             type = "scatter", mode = "lines", line = list(color = clrs1[[1]]))  %>%
+    add_trace(y = ~trueTestPositivity, name = "True Test Positivity", line = list( color = clrs1[[2]])) %>%
+    layout(yaxis = list(title = "Positivity", range = yRangePos, tickformat = '%'), xaxis = list(title = "Day", range = xRange), legend = list(x = 0, y = 1.2, orientation = 'h'),
+           font = list(size = 11), showlegend = FALSE) 
+  
+  
+  posLegends <- c("Total Positive Tests", "True Positive Tests")
+  n <- length(posLegends)
+  y_annotation <- seq(1, 1-n*.024, length.out = n)
+  
+  for(i in 1:n){
+    positivityChart <- positivityChart %>%
+      add_annotations( text = posLegends[i], font = list(color = clrs1[i], size = 11), x = .05, y = y_annotation[i],
+                       xref = "paper", yref = "paper", showarrow = FALSE, xanchor = 'left')
+    
+  }
+  
+ 
+  return(positivityChart)
+   
+}
+
 
 ########################
 # table
@@ -314,5 +280,80 @@ formattedParameterTableFunction <- function(rawTableInput, testParameters){
   
   return(list(basicTable = basicTable, testTable = testTable, popsocTable = popsocTable, extraTable = extraTable))
   
+  
+}
+
+chartingFunction <- function(chartData, chartParameters, annotations = TRUE){
+  
+  ########################
+  # charts
+  ########################
+  
+  if(annotations){
+    maxInf <- chartData[which.max(chartData$infected),]
+    
+    maxInfAnnotation <- list(
+      x = maxInf$day, y = maxInf$infected, text = paste0("Max Inf.: ", sprintf("%.1f", maxInf$infected)),
+      xref = "x", yref = "y", showarrow = TRUE, arrowhead = 1, ax = -40, ay = -20
+    )
+    
+    maxQuar <- chartData[which.max(chartData$bedsUsed),]
+    
+    
+    maxQuarAnnotation <- list(
+      x = maxQuar$day, y = maxQuar$bedsUsed, text = paste0("Max Quar.: ", sprintf("%.0f", maxQuar$bedsUsed)),
+      xref = "x", yref = "y", showarrow = TRUE, arrowhead = 1, ax = 50, ay = -20
+    )
+  }
+  xRange <- c(0, max(chartData$cycle/chartParameters$mechanicsParameters$cyclesPerDay))
+  yRangeTraj <- c(1.1*min(min(chartData$allRecovered),min(chartData$infected),0),
+                  1.1*max(max(chartData$allRecovered),max(chartData$infected)))
+  yRangeOcc <-c(1.1*min(chartData$bedsUsed),
+                1.1*max(chartData$bedsUsed))
+  
+  
+  ########################
+  trajectoryChart <- plot_ly(data = chartData, x = ~day, y = ~infected, name = "Infected (Symp + ASymp)", 
+                             type = "scatter", mode = "lines", line = list(color = clrs1[[1]]))  %>%
+    add_trace(y = ~allRecovered, name = "Recovered", line = list( color = clrs1[[2]])) %>% 
+    layout(yaxis = list(title = "Number of People", range = yRangeTraj), xaxis = list(title = "Day", range = xRange), legend = list(x = 0, y = 1.2, orientation = 'h'),
+           annotations = maxInfAnnotation, font = list(size = 9)) 
+  
+  
+  
+  
+  occupancyChart <- plot_ly(data = chartData, x = ~day, y = ~truePositives, name = "True Positives (Asymptomatic)",
+                            type = "scatter", mode = "none", stackgroup = "one", fillcolor = clrs2[[1]])  %>%
+    add_trace(y = ~symptomatic, name = "True Positives (Symptomatic)", fillcolor = clrs2[[2]]) %>%
+    add_trace(y = ~falsePositives, name = "False Positives", fillcolor = clrs2[[3]]) %>% 
+    add_trace(y = ~immuneFPs, name = "False Positives (Recovered)", fillcolor = clrs2[[4]]) %>% 
+    layout(yaxis = list(title = "Number of Beds", range = yRangeOcc), xaxis = list(title = "Day", range = xRange), legend = list(x =0, y = 1.2, orientation = 'h'),
+           annotations = maxQuarAnnotation, font = list(size = 9))
+  
+  ########################
+  # legends and annotations 
+  ########################
+  
+  trajLegends <- c("Infected", "Recovered")
+  occLegends <- c("True Positive (Asymp)","True Positive (Symp)","False Positive",  "False Positive (Immune)" )
+  n <- length(trajLegends)
+  n2 <- length(occLegends)
+  y_annotation <- seq(1, 1-n*.017, length.out = n)
+  y_annotation2 <- seq(0.87,1, length.out = n2)
+  
+  for(i in 1:n){
+    trajectoryChart <- trajectoryChart %>%
+      add_annotations( text = trajLegends[i], font = list(color = clrs1[i]), x = .05, y = y_annotation[i], xref = "paper", yref = "paper", showarrow = FALSE, xanchor = 'left')
+    
+  }
+  
+  for(i in 1:n2){
+    
+    occupancyChart <- occupancyChart %>%
+      add_annotations( text = occLegends[i], font = list(color = clrs2[i]), x = .7, y = y_annotation2[i], xref = "paper", yref = "paper", showarrow = FALSE, xanchor = 'left')
+    
+  }
+  
+  return(list(occupancyChart =occupancyChart, trajectoryChart = trajectoryChart))
   
 }

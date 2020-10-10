@@ -40,8 +40,10 @@ evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyF
   # states <- stateDataFrame
   # invariants <- timeInvariants
   # exoShockFun <- testParameters$exogeneousShockFunction
+  # partyFun <- partyFun
+  # ssFun <- ssFunction
   # mechanics <- testParameters$mechanicsParameters
-  # initializing <- TRUE
+  # initializing <- FALSE
   # stateNameVec <- colnames(states %>% select(-cycle, -testingCost))
   
   oldState <- states %>%  filter(cycle == max(cycle))
@@ -57,11 +59,15 @@ evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyF
   nStates <- length(stateNameVec)
   asymptomaticShareOfNonIsolated <- oldState$asymptomatic/nonIsolatedPopFunction(oldState)
   
+  ################################################
+  # progress the model
+  ################################################
   
   # how many go where. to ROW from COLUMN - ["susceptible","asymptomatic"] is # people going from susc. to asymp.
   stateTransferMatrix <- matrix(data = rep(0, nStates^2), nrow = nStates, ncol = nStates, dimnames = list(stateNameVec, stateNameVec) )
   
   contactMatrixTransmissionValue <- contactMatrixTransmission(invariants, partyValue)
+  
   
   # print(testParameters$timeInvariantParams$asymptomaticTransRate - contactMatrixTransmissionValue)
   stateTransferMatrix["susceptible","exposed"] <- - (contactMatrixTransmissionValue*(asymptomaticShareOfNonIsolated))* oldState$susceptible  - exoShockValue - superSpreaderValue
@@ -142,46 +148,56 @@ evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyF
   newState$cycle <- oldState$cycle + 1  
   newState <- newState %>%  select(cycle, everything())
   
+  ################################################
   # compute some diagnostic numbers
-  newStudentsEnteringIsolation <- if(initializing){0} else {
-    (1- invariants$testPCRSpecificity)/invariants$testingTime * previousOldState$susceptible + # FPs from susceptible 
-      invariants$testPCRSensitivity/invariants$testingTime * previousOldState$asymptomatic + # TPs from symptomatic
-      ((1 - invariants$testPCRSpecificity)/invariants$testingTime) * previousOldState$hiddenRecovered  + # FPs from hiddenRec
-      invariants$symptomOnsetRate * oldState$asymptomatic + # symptomatic from asymp
-      invariants$symptomOnsetRate* oldState$truePositives # symptomatic from TPs
+  ################################################
+  
+  
+  newStudentsSymptomatic <- invariants$symptomOnsetRate * oldState$asymptomatic + # symptomatic from asymp
+    invariants$symptomOnsetRate* oldState$truePositives # symptomatic from TPs
+  
+  if(initializing){
+    newStudentsEnteringIsolation <- newStudentsSymptomatic
+    newStudentsEnteringQuarantine <- 0
+    accurateCTs <- 0
     
-  }
-  
-  newStudentsSymptomatic <- if(initializing){0} else {
+    newTestCost <- 0
+    testPositivity <- NA
+    trueTestPositivity <- NA
     
-    invariants$symptomOnsetRate * oldState$asymptomatic + # symptomatic from asymp
-      invariants$symptomOnsetRate* oldState$truePositives # symptomatic from TPs
+  } else {
+
+    if(invariants$runContactTracing){
+      newStudentsEnteringQuarantine <- -stateTransferMatrix["susceptible","quarantineSusc"] - stateTransferMatrix["exposed","quarantineExp"] - stateTransferMatrix["asymptomatic","quarantineAsymp"]  
+      accurateCTs <- contactsTraced$totalNewExposedFound + contactsTraced$totalNewAsympFound
+    }
     
-  }
-  
-  newStudentsEnteringQuarantine <- if(invariants$runContactTracing && !initializing){
-    -stateTransferMatrix["susceptible","quarantineSusc"] - stateTransferMatrix["exposed","quarantineExp"] - stateTransferMatrix["asymptomatic","quarantineAsymp"]  
-  } else {0}
-  
-  accurateCTs <- if(invariants$runContactTracing && !initializing){
-    contactsTraced$totalNewExposedFound + contactsTraced$totalNewAsympFound} else {0}
-  
-  
-  # cost per test done
-  if(!initializing){
+    totalTestsDone <- (previousOldState$susceptible + previousOldState$exposed + previousOldState$asymptomatic + previousOldState$hiddenRecovered)/invariants$testingTime
+
+    truePositiveTests <- invariants$testPCRSensitivity/invariants$testingTime * previousOldState$asymptomatic  # TPs from symptomatic
+    falsePositiveTests <- (1- invariants$testPCRSpecificity)/invariants$testingTime * previousOldState$susceptible + # FPs from susceptible 
+      ((1 - invariants$testPCRSpecificity)/invariants$testingTime) * previousOldState$hiddenRecovered  # FPs from hiddenRec
+
+    totalPositiveTests <- truePositiveTests + falsePositiveTests
+    testPositivity <- totalPositiveTests/totalTestsDone
+    trueTestPositivity <- truePositiveTests/totalTestsDone
     
-    newTestCost <- invariants$testPCRCost/invariants$testingTime * (previousOldState$susceptible + previousOldState$asymptomatic + previousOldState$hiddenRecovered) 
+    newStudentsEnteringIsolation <- totalPositiveTests + newStudentsSymptomatic
+    
+    
+    newTestCost <- invariants$testPCRCost * totalTestsDone
     if(invariants$pooledTests){newTestCost <- newTestCost/invariants$podSize}
     
     # conf test cost
     newTestCost <- newTestCost + invariants$testConfCost * newStudentsEnteringIsolation
-  
-    newState$testingCost <- oldState$testingCost + newTestCost
     
+    
+  }
   
-  } else {newState$testingCost <- oldState$testingCost}
+  newState$testingCost <- oldState$testingCost + newTestCost
   
   
+
   
   if(newState$cycle %% 24 == 0){print(newState$cycle/mechanics$nCycles)}
   # print(rowSums(oldState %>% select(-cycle, -testingCost)))
@@ -196,22 +212,34 @@ evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyF
     newStudentsEnteringQuarantine = newStudentsEnteringQuarantine,
     accurateCTs = accurateCTs,
     newStudentsEnteringIsolation = newStudentsEnteringIsolation,
-    newStudentsSymptomatic = newStudentsSymptomatic )
+    newStudentsSymptomatic = newStudentsSymptomatic, 
+    testPositivity = testPositivity,
+    trueTestPositivity = trueTestPositivity)
+  
+  ################################################
+  # outputs
+  ################################################
+  
   
   return(list(newState = newState, diagNumbers = diagNumbers, stateTransferMatrixClean = stateTransferMatrixClean))
   
   
 }
 
-
+################################################
+# main function
+################################################
 
 modelRunner <- function(initialState, timeInvariants, exoShockFun, partyFun, ssFunction, mechanics){
 
   # initialState <- testParameters$stateParams
   # timeInvariants <- testParameters$timeInvariantParams
   # exoShockFun <- testParameters$exogeneousShockFunction
+  # partyFun = testParameters$partyFunction
+  # ssFunction = testParameters$superSpreaderFunction
   # mechanics <- testParameters$mechanicsParameters
   
+
   stateNames <- colnames(initialState %>% select(-cycle, -testingCost))
   stateDataFrame <- initialState
   diagnosticMatrix <- list()

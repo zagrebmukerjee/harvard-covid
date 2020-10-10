@@ -26,16 +26,19 @@ if (!dir.exists(pdfLocation)){dir.create(pdfLocation)}
 testsToRun <- read.csv("testList.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
 scenarioList <- read.csv("RunValues.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
 
-for(t in 1:nrow(testsToRun)){
-
+# for(t in 1:nrow(testsToRun)){
+  
+  t <- 1
+  
   testDetails <- testsToRun[t,]
   
   scenariosToRun <- scenarioList %>% filter(TestName %in% c(testDetails$scenario1, testDetails$scenario2))
   
   
-  for(scenarioNumber in 1:nrow(scenariosToRun)){
-    print(scenarioNumber)
-    
+  # for(scenarioNumber in 1:nrow(scenariosToRun)){
+    # print(scenarioNumber)
+  scenarioNumber <- 1
+
     testParameters <- parameterSetupFunction(scenarioNumber, scenariosToRun)
     
     ## New runner
@@ -44,7 +47,7 @@ for(t in 1:nrow(testsToRun)){
       timeInvariants = testParameters$timeInvariantParams,
       exoShockFun = testParameters$exogeneousShockFunction,
       partyFun = testParameters$partyFunction,
-      ssFun = testParameters$superSpreaderFunction,
+      ssFunction = testParameters$superSpreaderFunction,
       mechanics = testParameters$mechanicsParameters)
     
     outputData <- modelOutputs$outputData
@@ -68,11 +71,11 @@ for(t in 1:nrow(testsToRun)){
     )
     save(outputs, file = paste0(dataLocation,scenariosToRun[scenarioNumber,]$TestName,"Data.Rdata"))
     
-  }
+  # }
   
   
   # vizRunner(generateDiff = testDetails$generateDiff, stitch = testDetails$stitch, testDetails = testDetails, scenariosToRun = scenariosToRun)
   
   # rm(list=c("outputData", "testParameters"))
 
-}
+# }

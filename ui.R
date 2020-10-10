@@ -207,7 +207,7 @@ ui <- dashboardPage(title="CovidU",
        max = 80
      ),
      bsTooltip(
-       "asymp", 
+       "ssDate", 
        "Date on which a superspreader event occurs (0 disables)",
        placement = "bottom", 
        trigger = "hover"
@@ -220,7 +220,7 @@ ui <- dashboardPage(title="CovidU",
        max = 500
      ),
      bsTooltip(
-       "asymp", 
+       "ssSize", 
        "Size of a superspreader event if one occurs (0 disables). Capped at 20 percent of total population",
        placement = "bottom", 
        trigger = "hover"
@@ -465,6 +465,7 @@ ui <- dashboardPage(title="CovidU",
   
   dashboardBody(
     dashboardTheme,
+    tags$strong("Please Wait for Computation before Downloading Report"),
     tags$header(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing). "),
     tags$header("You can also download a detailed PDF report on your chosen scenario."),
     fluidRow(
