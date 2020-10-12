@@ -17,6 +17,8 @@ source("ui.R")
 
 server <- function(input, output, session){
    
+   session.id <- reactive({ as.character(floor(runif(1)*1e20)) })
+   
    session$allowReconnect("force") # this will stop it going grey, we hope
    
    # update party slider based on pop
@@ -29,6 +31,7 @@ server <- function(input, output, session){
    observeEvent(input$days, {updateSliderInput(session, "ssDate", max  = input$days)},
                 ignoreNULL = FALSE)
    
+
    
    
    funList <- eventReactive(eventExpr = input$recomputeButton, 
@@ -78,7 +81,7 @@ server <- function(input, output, session){
          tempReport <- file.path(tempdir(), "LiteReport.Rmd")
          file.copy("LiteReport.Rmd", tempReport, overwrite = TRUE)
          
-         funList <- reactive({campusSIRFunction(
+         funList2 <- reactive({campusSIRFunction(
             r0 = input$r0,
             testPCRSpecificity = input$spec,
             testPCRSensitivity = input$sens,
@@ -102,7 +105,7 @@ server <- function(input, output, session){
          
          
          # Set up parameters to pass to Rmd document
-         params <- list(table = funList()$table, ggCharts = funList()$reportCharts, paramTable = funList()$paramTable)
+         params <- list(table = funList2()$table, ggCharts = funList2()$reportCharts, paramTable = funList2()$paramTable)
          
          # Knit the document, passing in the `params` list, and eval it in a
          # child of the global environment (this isolates the code in the document
@@ -112,6 +115,38 @@ server <- function(input, output, session){
                            envir = new.env(parent = globalenv())
          )}
    )
+   
+   
+   observeEvent(input$saveControl, {
+      
+      controlFilename <<- paste0("savedData/", session.id(), "Control.rds" )
+      
+      saveRDS(object = funList()$outputForDiff, file = controlFilename)
+   })
+   
+   
+   observeEvent(input$saveTreatment, {
+      
+      treatmentFilename <<- paste0("savedData/", session.id(), "Treatment.rds")
+      
+      saveRDS(object = funList()$outputForDiff, file = treatmentFilename)
+      
+   })
+   
+   observeEvent(input$clearSaves, {
+      
+      if(exists("controlFilename"))
+         if (file.exists(controlFilename)) 
+            #Delete file if it exists
+            file.remove(controlFilename)    
+      
+      if(exists("treatmentFilename"))
+         if (file.exists(treatmentFilename)) 
+            #Delete file if it exists
+            file.remove(treatmentFilename)    
+   })
+   
+   
    
 }
 

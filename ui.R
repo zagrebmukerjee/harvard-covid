@@ -459,6 +459,24 @@ ui <- dashboardPage(title="CovidU",
         placement = "bottom", 
         trigger = "hover"
       )
+    ),
+    menuItem(
+      "Save for Comparison",
+      tabName = "save",
+      icon = icon("save"),
+      actionButton(inputId = "saveControl",
+                   label = "Save As Control",
+                   icon("file-export")
+                   
+      ),
+      actionButton(inputId = "saveTreatment",
+                   label = "Save As Treatment",
+                   icon("file-export")
+      ),
+      actionButton(inputId = "clearSaves",
+                   label = "Clear Saved States",
+                   icon("trash-alt")
+      )
     )
     
   )),
