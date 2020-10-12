@@ -116,6 +116,20 @@ server <- function(input, output, session){
          )}
    )
    
+   output$comparisonPlot <- renderPlotly(
+      subplot(funList()$chart, funList()$positivityChart, titleX = TRUE, titleY = TRUE, margin = .05) %>% 
+         layout(showlegend = FALSE, title = "Disease Trajectory & Positivity Rate") #%>%
+      # layout(height = 400, width = 800)
+   )
+   
+   output$comparisonTabledata <- DT::renderDataTable({
+      DT::datatable(
+         funList()$table,
+         rownames = FALSE,
+         colnames = c("", ""),
+         options = list(paging = FALSE, searching = FALSE, dom = "t"),
+         class = 'order-column cell-border hover',
+      )})
    
    observeEvent(input$saveControl, {
       
@@ -130,6 +144,16 @@ server <- function(input, output, session){
       treatmentFilename <<- paste0("savedData/", session.id(), "Treatment.rds")
       
       saveRDS(object = funList()$outputForDiff, file = treatmentFilename)
+      
+   })
+   
+   
+   observeEvent(input$tabs, {
+      # shinyjs::hide(id = "sidebar")
+      
+      if(input$tabs  == "Causal Effect") {
+         addClass(selector = "body", class = "sidebar-collapse")
+      }
       
    })
    

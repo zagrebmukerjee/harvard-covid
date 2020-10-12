@@ -125,7 +125,8 @@ dashboardTheme <- shinyDashboardThemeDIY(
 ###########################################
 
 
-ui <- dashboardPage(title="CovidU",
+ui <- dashboardPage(
+  title="CovidU",
   
   dashboardHeader(
     title = dashboardLogo,
@@ -152,7 +153,7 @@ ui <- dashboardPage(title="CovidU",
                ))
           ),
   br(),
-  sidebarMenu(
+  sidebarMenu( id = "sidebar",
     menuItem(
       "Basic Assumptions",
       tabName = "assumptions",
@@ -482,16 +483,28 @@ ui <- dashboardPage(title="CovidU",
   )),
   
   dashboardBody(
+    useShinyjs(),
     dashboardTheme,
-    tags$strong("Please Wait for Computation before Downloading Report"),
-    tags$header(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing). "),
-    tags$header("You can also download a detailed PDF report on your chosen scenario."),
-    fluidRow(
-      box(width=15, plotlyOutput('plot'))),
-    fluidRow(
-      box(width=15, DT::dataTableOutput("tabledata"))),
-    tags$footer(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."),
-    br()
+    tabsetPanel(id = "tabs",
+      tabPanel("Main", 
+        tags$strong("Please Wait for Computation before Downloading Report"),
+        tags$header(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing). "),
+        tags$header("You can also download a detailed PDF report on your chosen scenario."),
+        fluidRow(
+          box(width=15, plotlyOutput('plot'))),
+        fluidRow(
+          box(width=15, DT::dataTableOutput("tabledata"))),
+        tags$footer(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."),
+        br()
+      ),
+      tabPanel("Causal Effect",
+               fluidRow(
+                 box(width=15, plotlyOutput('comparisonPlot'))),
+               fluidRow(
+                 box(width=15, DT::dataTableOutput("comparisonTabledata"))),
+               tags$footer(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."),
+      )
+    )
   )
   
   
