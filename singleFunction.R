@@ -124,12 +124,19 @@ campusSIRFunction <- function(
       positivityChart <- positivityChartingFunction(chartData = outputData, chartDiags = diagnosticNumbers, chartParameters = testParameters)
       formattedParameterTable <- formattedParameterTableFunction(tables$tableParams, testParameters = testParameters)
 
-      output <- list("chart" = chartDisplay, "positivityChart" = positivityChart, "table" = formattedTable, "paramTable" = formattedParameterTable, "reportCharts" = ggCharts)
+      dashboardOutput <- list(
+        "chart" = chartDisplay,
+        "positivityChart" = positivityChart,
+        "table" = formattedTable,
+        "paramTable" = formattedParameterTable,
+        "reportCharts" = ggCharts,
+        "allData" = outputData)
       toc()
       
       # write.csv(formattedTable, "tmp.csv", row.names = FALSE)
       
-      return(output)
+
+      return(dashboardOutput)
       
       
     }
