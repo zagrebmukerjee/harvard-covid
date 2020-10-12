@@ -170,7 +170,9 @@ evolutionFunction <- function(states, invariants, mechanics, exoShockFun, partyF
     if(invariants$runContactTracing){
       newStudentsEnteringQuarantine <- -stateTransferMatrix["susceptible","quarantineSusc"] - stateTransferMatrix["exposed","quarantineExp"] - stateTransferMatrix["asymptomatic","quarantineAsymp"]  
       accurateCTs <- contactsTraced$totalNewExposedFound + contactsTraced$totalNewAsympFound
-    }
+    } else {
+      newStudentsEnteringQuarantine <- 0
+      accurateCTs <- 0}
     
     totalTestsDone <- (previousOldState$susceptible + previousOldState$exposed + previousOldState$asymptomatic + previousOldState$hiddenRecovered)/invariants$testingTime
 

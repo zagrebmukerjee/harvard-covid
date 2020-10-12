@@ -12,12 +12,21 @@ library(DT)
 library(gridExtra)
 
 source("singleFunction.R")
+source("diffVizFunction.R")
 source("ui.R")
-
 
 server <- function(input, output, session){
    
+   
+   session.id <- reactive({ as.character(floor(runif(1)*1e20)) })
+   
    session$allowReconnect("force") # this will stop it going grey, we hope
+   
+   fileNameList <- list(ctrl = "", trt = "")
+   
+   ###########################################
+   # Scenario Tab
+   ###########################################
    
    # update party slider based on pop
    observeEvent(input$pop, {updateSliderInput(session, "partySizeInput", max  = input$pop)},
@@ -29,7 +38,16 @@ server <- function(input, output, session){
    observeEvent(input$days, {updateSliderInput(session, "ssDate", max  = input$days)},
                 ignoreNULL = FALSE)
    
+
    
+   # show sidebar if hidden
+   observeEvent(input$tabs, {
+      
+      if(input$tabs  == "Single Scenario") {
+         removeClass(selector = "body", class = "sidebar-collapse")
+      }
+      
+   })
    
    funList <- eventReactive(eventExpr = input$recomputeButton, 
                             valueExpr = {campusSIRFunction(
@@ -78,7 +96,7 @@ server <- function(input, output, session){
          tempReport <- file.path(tempdir(), "LiteReport.Rmd")
          file.copy("LiteReport.Rmd", tempReport, overwrite = TRUE)
          
-         funList <- reactive({campusSIRFunction(
+         funList2 <- reactive({campusSIRFunction(
             r0 = input$r0,
             testPCRSpecificity = input$spec,
             testPCRSensitivity = input$sens,
@@ -102,7 +120,7 @@ server <- function(input, output, session){
          
          
          # Set up parameters to pass to Rmd document
-         params <- list(table = funList()$table, ggCharts = funList()$reportCharts, paramTable = funList()$paramTable)
+         params <- list(table = funList2()$table, ggCharts = funList2()$reportCharts, paramTable = funList2()$paramTable)
          
          # Knit the document, passing in the `params` list, and eval it in a
          # child of the global environment (this isolates the code in the document
@@ -113,6 +131,95 @@ server <- function(input, output, session){
          )}
    )
    
+   observeEvent(input$saveControl, {
+      
+      if (!dir.exists("savedData/")){dir.create("savedData/")} 
+      
+      fileNameList$ctrl <<- paste0("savedData/", session.id(), "Control.rds" )
+      
+      saveRDS(object = funList()$outputForDiff, file = fileNameList$ctrl)
+   })
+   
+   
+   observeEvent(input$saveTreatment, {
+      
+      if (!dir.exists("savedData/")){dir.create("savedData/")} 
+      
+      fileNameList$trt <<- paste0("savedData/", session.id(), "Treatment.rds")
+      
+      saveRDS(object = funList()$outputForDiff, file = fileNameList$trt)
+      
+   })
+   
+   
+   
+   observeEvent(input$clearSaves, {
+      print(fileNameList$ctrl)
+      print(fileNameList$ctrl)
+      if (file.exists(fileNameList$ctrl)){
+         print("A")
+         file.remove(fileNameList$ctrl)}
+      if (file.exists(fileNameList$trt)) {
+         print("B")
+         file.remove(fileNameList$trt)} 
+   })
+   
+   ###########################################
+   # Comparison Tab
+   ###########################################
+   
+   
+   observeEvent(input$tabs, {
+
+      if(input$tabs  == "Causal Effect") {
+         addClass(selector = "body", class = "sidebar-collapse")
+      }
+      
+   })
+   
+   
+   causalEffectData <- eventReactive(
+         eventExpr = input$compareButton, 
+         valueExpr = {
+            print("Button Pressed")
+            
+            if (!file.exists(fileNameList$ctrl) ||!file.exists(fileNameList$trt) ){
+               showModal(modalDialog(
+                  title = "Error",
+                  "Please Save Scenarios as Control and/or Treatment in the Single Scenario Tab"
+               ))
+            } else {
+               print("All Good")
+               diffVizFunction(controlFile = fileNameList$ctrl, treatmentFile = fileNameList$trt)
+                  
+            }
+         }
+      )
+   
+   output$comparisonPlot <- renderPlotly(
+      subplot(causalEffectData()$diffTrajectoryChart, causalEffectData()$diffPositivityChart, titleX = TRUE, titleY = TRUE, margin = .05) %>% 
+         layout(showlegend = FALSE, title = "Disease Trajectory & Positivity Rate") #%>%
+      # layout(height = 400, width = 800)
+   )
+   
+   output$comparisonTabledata <- DT::renderDataTable({
+      DT::datatable(
+         caption = "Changes in Outcomes:",
+         causalEffectData()$diffResultsTable,
+         rownames = FALSE,
+         colnames = c("", ""),
+         options = list(paging = FALSE, searching = FALSE, dom = "t"),
+         class = 'order-column cell-border hover',
+      )})
+   
+   onStop(function(){
+      if (file.exists(fileNameList$ctrl)){
+         file.remove(fileNameList$ctrl)}
+
+      if (file.exists(fileNameList$trt)) {
+         file.remove(fileNameList$trt)}
+   })
+
 }
 
 

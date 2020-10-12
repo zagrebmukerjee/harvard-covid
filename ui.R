@@ -125,12 +125,16 @@ dashboardTheme <- shinyDashboardThemeDIY(
 ###########################################
 
 
-ui <- dashboardPage(title="CovidU",
+ui <- dashboardPage(
+  title="CovidU",
   
   dashboardHeader(
     title = dashboardLogo,
     titleWidth = 350
   ),
+  ###########################################
+  # Sidebar
+  ###########################################
   
   dashboardSidebar(
   width = 350,
@@ -152,7 +156,7 @@ ui <- dashboardPage(title="CovidU",
                ))
           ),
   br(),
-  sidebarMenu(
+  sidebarMenu( id = "sidebar",
     menuItem(
       "Basic Assumptions",
       tabName = "assumptions",
@@ -191,7 +195,7 @@ ui <- dashboardPage(title="CovidU",
         label = "Starting Asymptomatic Cases",
         value = 3, 
         min = 0, 
-        max = 26
+        max = 30
       ),
       bsTooltip(
         "asymp", 
@@ -459,21 +463,61 @@ ui <- dashboardPage(title="CovidU",
         placement = "bottom", 
         trigger = "hover"
       )
+    ),
+    menuItem(
+      "Save for Comparison",
+      tabName = "save",
+      icon = icon("save"),
+      actionButton(inputId = "saveControl",
+                   label = "Save As Control",
+                   icon("file-export")
+                   
+      ),
+      actionButton(inputId = "saveTreatment",
+                   label = "Save As Treatment",
+                   icon("file-export")
+      ),
+      actionButton(inputId = "clearSaves",
+                   label = "Clear Saved States",
+                   icon("trash-alt")
+      )
     )
     
   )),
+  ###########################################
+  # Body
+  ###########################################
+  
   
   dashboardBody(
+    useShinyjs(),
     dashboardTheme,
-    tags$strong("Please Wait for Computation before Downloading Report"),
-    tags$header(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing). "),
-    tags$header("You can also download a detailed PDF report on your chosen scenario."),
-    fluidRow(
-      box(width=15, plotlyOutput('plot'))),
-    fluidRow(
-      box(width=15, DT::dataTableOutput("tabledata"))),
-    tags$footer(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."),
-    br()
+    tabsetPanel(id = "tabs",
+      tabPanel("Single Scenario", 
+        tags$strong("Please Wait for Computation before Downloading Report"),
+        tags$header(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing). "),
+        tags$header("You can also download a detailed PDF report on your chosen scenario."),
+        fluidRow(
+          box(width=15, plotlyOutput('plot'))),
+        fluidRow(
+          box(width=15, DT::dataTableOutput("tabledata"))),
+        tags$footer(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."),
+        br()
+      ),
+      tabPanel("Causal Effect",
+               div(style="display:inline-block",
+                   actionButton(
+                     inputId = "compareButton",
+                     label = "Generate Comparison",
+                     icon("play-circle")),
+                   style="float:center"),
+               fluidRow(
+                 box(width=15, plotlyOutput('comparisonPlot'))),
+               fluidRow(
+                 box(width=15, DT::dataTableOutput("comparisonTabledata"))),
+               tags$footer(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."),
+      )
+    )
   )
   
   
