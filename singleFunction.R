@@ -119,7 +119,7 @@ campusSIRFunction <- function(
       tables <- tableFunction(tableData = outputData, tableParameters = testParameters, tableDiags = diagnosticNumbers)
       ggCharts <- ggPlotChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)
       
-      formattedTable <- formattedResultsTableFunction(tables$keyResults %>%  filter(!(Name %in% c("Accurate Contact Traces", "Total Quarantine Entries")))) 
+      formattedResultsTable <- formattedResultsTableFunction(tables$keyResults %>%  filter(!(Name %in% c("Accurate Contact Traces", "Total Quarantine Entries")))) 
       chartDisplay <- dashboardChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)$dashboard
       positivityChart <- positivityChartingFunction(chartData = outputData, chartDiags = diagnosticNumbers, chartParameters = testParameters)
       formattedParameterTable <- formattedParameterTableFunction(tables$tableParams, testParameters = testParameters)
@@ -128,18 +128,17 @@ campusSIRFunction <- function(
         testParameters = testParameters,
         outputData = outputData, 
         diagnosticNumbers = diagnosticNumbers,
-        resultsTable = formattedTable,
-        paramTable = formattedParameterTable,
+        rawTables = tables,
         charts = ggCharts
       )
       
       dashboardOutput <- list(
-        "chart" = chartDisplay,
-        "positivityChart" = positivityChart,
-        "table" = formattedTable,
-        "paramTable" = formattedParameterTable,
-        "reportCharts" = ggCharts,
-        "outputForDiff" = outputForDiff)
+        chart = chartDisplay,
+        positivityChart = positivityChart,
+        table = formattedResultsTable,
+        paramTable = formattedParameterTable,
+        reportCharts = ggCharts,
+        outputForDiff = outputForDiff)
       toc()
       
       # write.csv(formattedTable, "tmp.csv", row.names = FALSE)

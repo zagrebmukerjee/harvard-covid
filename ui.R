@@ -132,6 +132,9 @@ ui <- dashboardPage(
     title = dashboardLogo,
     titleWidth = 350
   ),
+  ###########################################
+  # Sidebar
+  ###########################################
   
   dashboardSidebar(
   width = 350,
@@ -192,7 +195,7 @@ ui <- dashboardPage(
         label = "Starting Asymptomatic Cases",
         value = 3, 
         min = 0, 
-        max = 26
+        max = 30
       ),
       bsTooltip(
         "asymp", 
@@ -481,12 +484,16 @@ ui <- dashboardPage(
     )
     
   )),
+  ###########################################
+  # Body
+  ###########################################
+  
   
   dashboardBody(
     useShinyjs(),
     dashboardTheme,
     tabsetPanel(id = "tabs",
-      tabPanel("Main", 
+      tabPanel("Single Scenario", 
         tags$strong("Please Wait for Computation before Downloading Report"),
         tags$header(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing). "),
         tags$header("You can also download a detailed PDF report on your chosen scenario."),
@@ -498,6 +505,12 @@ ui <- dashboardPage(
         br()
       ),
       tabPanel("Causal Effect",
+               div(style="display:inline-block",
+                   actionButton(
+                     inputId = "compareButton",
+                     label = "Generate Comparison",
+                     icon("play-circle")),
+                   style="float:center"),
                fluidRow(
                  box(width=15, plotlyOutput('comparisonPlot'))),
                fluidRow(

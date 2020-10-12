@@ -161,8 +161,9 @@ positivityChartingFunction <- function(chartData, chartDiags, chartParameters){
     trueTestPositivity = c(NA, lapply(chartDiags, function(a){a$trueTestPositivity}) %>%  unlist() )
   )
   
-  xRange <- c(0, max(chartData$cycle/chartParameters$mechanicsParameters$cyclesPerDay))
-  yRangePos <- c(0, 1)
+  xRange <- c(0, max(positivityTimeSeries$day))
+  yRangePos <- c(0, min(1, 2*max(positivityTimeSeries$testPositivity, na.rm = TRUE)))
+  
   
   positivityChart <- plot_ly(data = positivityTimeSeries, x = ~day, y = ~testPositivity, name = "Test Positivity", 
                              type = "scatter", mode = "lines", line = list(color = clrs1[[1]]))  %>%
