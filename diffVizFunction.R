@@ -1,6 +1,6 @@
 diffVizFunction <- function(controlFile, treatmentFile ){
-  controlFile <- "savedData/testControl.rds"
-  treatmentFile <- "savedData/testTreatment.rds"
+  # controlFile <- "savedData/testControl.rds"
+  # treatmentFile <- "savedData/testTreatment.rds"
   
   controlData <- readRDS(controlFile)
   treatmentData <- readRDS(treatmentFile)
