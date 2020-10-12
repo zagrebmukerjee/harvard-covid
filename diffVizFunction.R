@@ -130,8 +130,8 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   
   diffResults <- treatmentResultsTable
   diffResults$Value <- treatmentResultsTable$Value - controlResultsTable$Value
-  diffResults$Name <- diffResults$diffName
-  diffResults$Notes <- diffResults$diffNotes
+  # diffResults$Name <- diffResults$diffName
+  # diffResults$Notes <- diffResults$diffNotes
   
   diffResults$TreatmentValue <- treatmentResultsTable$Value
   diffResults$ControlValue <- controlResultsTable$Value
