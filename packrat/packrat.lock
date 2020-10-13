@@ -15,11 +15,6 @@ Hash: f49c91ed6b763523e21e9a830cb6a2ca
 Requires: crosstalk, htmltools, htmlwidgets, jsonlite, magrittr,
     promises
 
-Package: Matrix
-Source: CRAN
-Version: 1.2-18
-Hash: 54974505e2addac3ec63f9d4bf8ff98a
-
 Package: R6
 Source: CRAN
 Version: 2.4.1
