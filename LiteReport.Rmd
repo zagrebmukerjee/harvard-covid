@@ -69,7 +69,7 @@ params$paramTable$extraTable%>% kable(align = "lcr", row.names = FALSE, col.name
 ```
   
 
-```{r charts, echo = FALSE, fig.height=4}
+```{r charts, echo = FALSE, fig.height=3.75}
 grid.arrange(params$ggCharts$trajectoryGGPlot, params$ggCharts$occupancyGGPlot, ncol = 2)
 ```
 
