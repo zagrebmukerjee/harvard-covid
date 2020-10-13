@@ -2,6 +2,12 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rprofile
+RData/
+report.Rmd
+subplot.png
+testApp.R
+tmp.csv
 packrat/lib*
 packrat/src
 packrat/lib*/
