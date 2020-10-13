@@ -15,6 +15,11 @@ Hash: f49c91ed6b763523e21e9a830cb6a2ca
 Requires: crosstalk, htmltools, htmlwidgets, jsonlite, magrittr,
     promises
 
+Package: MASS
+Source: CRAN
+Version: 7.3-53
+Hash: 34151e53eabf74b94c982a0d1f4a7f79
+
 Package: R6
 Source: CRAN
 Version: 2.4.1
@@ -163,7 +168,8 @@ Package: ggplot2
 Source: CRAN
 Version: 3.3.1
 Hash: a57121872bcdb844f4822f58d43f70c0
-Requires: digest, glue, gtable, isoband, rlang, scales, tibble, withr
+Requires: MASS, digest, glue, gtable, isoband, mgcv, rlang, scales,
+    tibble, withr
 
 Package: glue
 Source: CRAN
@@ -283,6 +289,11 @@ Source: CRAN
 Version: 1.1
 Hash: 1b6a18fd395589425e338a47b999099f
 Requires: mime, xfun
+
+Package: mgcv
+Source: CRAN
+Version: 1.8-33
+Hash: 5ee3b1282cd29db13e872366e0a7be33
 
 Package: mime
 Source: CRAN
