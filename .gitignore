@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-.Rprofile
 RData/
 report.Rmd
 subplot.png
