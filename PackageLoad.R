@@ -8,11 +8,8 @@ library(ggplot2)
 library(kableExtra)
 library(reshape2)
 library(rmarkdown)
-# library(webshot)
 library(pdftools)
-# library(Matrix)
 library(tictoc)
-# library(deSolve)
 
 
 clrs1 <- colorRampPalette(

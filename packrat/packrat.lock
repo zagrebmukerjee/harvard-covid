@@ -185,6 +185,7 @@ Package: hexbin
 Source: CRAN
 Version: 1.28.1
 Hash: 38f5e8c7439a986fee82ec0651c5eb39
+Requires: lattice
 
 Package: highr
 Source: CRAN
@@ -255,6 +256,11 @@ Source: CRAN
 Version: 1.0.0
 Hash: 074cadbb9efd565454f7df6a2a56a672
 Requires: BH, Rcpp, rlang
+
+Package: lattice
+Source: CRAN
+Version: 0.20-41
+Hash: ff87ada677a6e2aacdcc1f9412f68366
 
 Package: lazyeval
 Source: CRAN
