@@ -99,8 +99,13 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   
   
   xRange <- c(0, max(diffPosData$day))
-  yRangePos <- c(max(-1, 2*min(diffPosData$testPositivity, na.rm = TRUE)), 
-                 min(1, 2*max(diffPosData$testPositivity, na.rm = TRUE)))
+  yRangePos <- c(max(-1, 2*min(
+    min(diffPosData$testPositivity, na.rm = TRUE),
+    min(diffPosData$trueTestPositivity, na.rm = TRUE)
+  )), min(1, 2*max(
+    max(diffPosData$testPositivity, na.rm = TRUE),
+    max(diffPosData$trueTestPositivity, na.rm = TRUE),
+  )))
   
   
   diffPositivityChart <- plot_ly(data = diffPosData, x = ~day, y = ~testPositivity, name = "Test Positivity", 

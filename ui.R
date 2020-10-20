@@ -508,7 +508,7 @@ ui <- dashboardPage(
                div(style="display:inline-block",
                    actionButton(
                      inputId = "compareButton",
-                     label = "Generate Comparison",
+                     label = "Generate Comparison Report",
                      icon("play-circle")),
                    style="float:center"),
                fluidRow(

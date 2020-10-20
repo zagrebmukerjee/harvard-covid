@@ -1,16 +1,5 @@
 
 
-library(dplyr)
-library(plotly)
-
-library(knitr)
-library(ggplot2)
-library(kableExtra)
-library(reshape2)
-library(rmarkdown)
-library(pdftools)
-library(tictoc)
-
 
 clrs1 <- colorRampPalette(
   c("#003f5c",
