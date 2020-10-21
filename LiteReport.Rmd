@@ -38,7 +38,7 @@ options(warn = -1)
 
 ## CovidU: Detailed Report ^[Contact: Gary King <king@harvard.edu>, Zagreb Mukerjee <zagrebmukerjee@fas.harvard.edu>] 
 
-### Summary Report
+### Summary
 
 ```{r basicTable, echo = FALSE,comment=NA,background=NA}
   

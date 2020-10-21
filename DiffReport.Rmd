@@ -1,0 +1,97 @@
+---
+title: ""
+header-includes:
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{makecell}
+  - \usepackage{xcolor}
+  - \usepackage{graphicx}
+  - \setlength{\parskip}{1em}
+  - \usepackage{leading}
+  - \leading{5pt}
+output:
+  pdf_document: 
+    extra_dependencies: ["float","booktabs" ]
+params:
+  diffResultsTable: NA
+  diffParamsTables: NA
+  diffTrajectoryGGPlot: NA
+  diffOccupancyGGPlot: NA
+---
+
+```{r intro, include=FALSE}
+
+options(knitr.table.format = "latex")
+
+defaultW <- getOption("warn") 
+options(warn = -1)
+
+
+```
+
+## CovidU: Comparison Report ^[Contact: Gary King <king@harvard.edu>, Zagreb Mukerjee <zagrebmukerjee@fas.harvard.edu>] 
+
+Parameters not listed are held constant, as described on pages 2 and 3
+
+### Changes in Parameters 
+
+```{r basicTable, echo = FALSE,comment=NA,background=NA}
+if(nrow(params$diffParamsTables$diffBasicTable) > 0){  
+  params$diffParamsTables$diffBasicTable %>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+    kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+}
+```
+**Changes in Testing and Costs**
+```{r testTable, echo = FALSE,comment=NA,background=NA}
+if(nrow(params$diffParamsTables$diffTestTable) > 0){  
+  params$diffParamsTables$diffTestTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+    kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+}
+
+```
+**Changes in Population and Social**
+```{r popsocTable, echo = FALSE,comment=NA,background=NA}
+if(nrow(params$diffParamsTables$diffPopsocTable) > 0){  
+  params$diffParamsTables$diffPopsocTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+    kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+}
+
+```
+**Changes in Extra  Assumptions**
+```{r extraTable, echo = FALSE,comment=NA,background=NA}
+if(nrow(params$diffParamsTables$diffExtraTable) > 0){  
+  params$diffParamsTables$diffExtraTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+    kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+}
+
+```
+
+**Changes in Results**
+```{r resultsTable, echo = FALSE,comment=NA,background=NA}
+  
+params$diffResultsTable %>% kable(align = "lc", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
+    kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
+
+
+```
+    
+
+```{r charts, echo = FALSE, fig.height=3.75}
+grid.arrange(params$diffTrajectoryGGPlot, params$diffOccupancyGGPlot, ncol = 2)
+```
+
+
+
+```{r end, include = FALSE}
+
+options(warn = defaultW)
+
+```

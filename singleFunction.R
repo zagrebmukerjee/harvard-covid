@@ -26,23 +26,7 @@ campusSIRFunction <- function(
     ssDateInput,
     ssSizeInput
   ){
-   
-  
-  # load model functions
-  source("contactMatrixTransmission.R")
-  source("contactTracing.R")
-  source("Model.R")
-  
-  # load parameter setup functions
-  source("ParameterSetup.R")
-  source("vizFunction.R")
-  source("Visualization.R")
-  
-  dataLocation <- "RData/"
-  if (!dir.exists(dataLocation)){dir.create(dataLocation)} 
-  pdfLocation <- "pdfs/"
-  if (!dir.exists(pdfLocation)){dir.create(pdfLocation)}
-  
+
   
   testsToRun <- read.csv("testList.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
   scenarioList <- read.csv("RunValues.csv", fileEncoding="UTF-8-BOM", stringsAsFactors = FALSE)
@@ -129,7 +113,9 @@ campusSIRFunction <- function(
         outputData = outputData, 
         diagnosticNumbers = diagnosticNumbers,
         rawTables = tables,
-        charts = ggCharts
+        charts = ggCharts,
+        table = formattedResultsTable,
+        paramTable = formattedParameterTable
       )
       
       dashboardOutput <- list(

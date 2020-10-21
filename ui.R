@@ -465,7 +465,7 @@ ui <- dashboardPage(
       )
     ),
     menuItem(
-      "Save for Comparison",
+      "Save for Causal Effect",
       tabName = "save",
       icon = icon("save"),
       actionButton(inputId = "saveControl",
@@ -506,10 +506,16 @@ ui <- dashboardPage(
       ),
       tabPanel("Causal Effect",
                div(style="display:inline-block",
-                   actionButton(
-                     inputId = "compareButton",
-                     label = "Generate Comparison Report",
-                     icon("play-circle")),
+                   # actionButton(
+                   #   inputId = "compareButton",
+                   #   label = "Generate Comparison Report",
+                   #   icon("play-circle")),
+                   downloadButton(
+                     outputId = "downloadComparisonData",
+                     label = "Get Causal Effect Report",
+                     icon = icon("download"),
+                     style = "color: black; margin-left: 10px;"
+                   ),
                    style="float:center"),
                fluidRow(
                  box(width=15, plotlyOutput('comparisonPlot'))),

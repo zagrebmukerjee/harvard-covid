@@ -1,7 +1,7 @@
 diffVizFunction <- function(controlFile, treatmentFile ){
   # controlFile <- "savedData/testControl.rds"
   # treatmentFile <- "savedData/testTreatment.rds"
-  
+
   controlData <- readRDS(controlFile)
   treatmentData <- readRDS(treatmentFile)
   
@@ -104,7 +104,7 @@ diffVizFunction <- function(controlFile, treatmentFile ){
     min(diffPosData$trueTestPositivity, na.rm = TRUE)
   )), min(1, 2*max(
     max(diffPosData$testPositivity, na.rm = TRUE),
-    max(diffPosData$trueTestPositivity, na.rm = TRUE),
+    max(diffPosData$trueTestPositivity, na.rm = TRUE)
   )))
   
   
@@ -127,6 +127,46 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   }
   
   ################################################
+  # Generate diff charts for reports 
+  ################################################
+  
+  yRangeTraj <- c(1.1*min(
+    min(diffOutputData$allRecovered),min(diffOutputData$infected)), 1.1*max(max(diffOutputData$allRecovered),max(diffOutputData$infected)))
+  yRangeOcc <-c(1.4*min(diffOutputData$bedsUsed),
+                1.4*max(diffOutputData$bedsUsed))
+  
+  diffChartDataReshape <- diffOutputData %>%  select(Day = day, 
+                                            Infected = infected,
+                                            Recovered = allRecovered, bedsUsed, 
+                                            `False Positives` = falsePositives, 
+                                            `False Positives (Recovered)` = immuneFPs,
+                                            `True Positives (Asymp)` = truePositives, 
+                                            `True Positives (Symp)` = symptomatic) %>% melt(id = "Day")
+  trajData <- diffChartDataReshape %>%  filter(variable %in% c("Infected", "Recovered"))
+  occData <- diffChartDataReshape %>%  filter(variable %in% c("False Positives", "False Positives (Recovered)", "True Positives (Asymp)", "True Positives (Symp)"))
+  
+  
+  diffTrajectoryGGPlot <- ggplot(data = trajData, aes(x = Day, y = value, colour = variable)) + 
+    geom_line(size = 1) +
+    scale_colour_manual(values = clrs1[1:2]) + theme_bw() + ylab(yaxisString) +
+    scale_x_continuous(limits = xRange, expand = c(0, 0)) + scale_y_continuous(limits = yRangeTraj, expand = c(0,0))  +
+    theme(legend.position = c(0.2, 0.9), legend.title = element_blank(), legend.text = element_text(size = 6), legend.key.size = unit(.15,"inches"),
+          panel.border = element_blank(),
+          axis.title.y = element_text(size = 8, margin = margin(t = 0, b = 0, r = 10, l = 0)),
+          axis.title.x = element_text(size = 8, margin = margin(t = 10, b = 0, r = 0, l = 0))) 
+  
+  
+  diffOccupancyGGPlot <- ggplot(data = occData, aes(x = Day, y = value, colour = variable)) +
+    geom_line(size = 1)  +
+    scale_colour_manual(values = clrs2[4:1]) + theme_bw() + ylab("Beds Used") +
+    scale_x_continuous(limits = xRange, expand = c(0, 0)) + scale_y_continuous(limits = yRangeOcc, expand = c(0,0))  +
+    theme(legend.position = c(0.25, 0.85), legend.title = element_blank(), legend.text = element_text(size = 6), legend.key.size = unit(.15,"inches"),
+          panel.border = element_blank(),
+          axis.title.y = element_text(size = 8, margin = margin(t = 0, b = 0, r = 10, l = 0)),
+          axis.title.x = element_text(size = 8, margin = margin(t = 10, b = 0, r = 0, l = 0)))
+  
+  
+  ################################################
   # Generate diff tables for dashboard
   ################################################
   
@@ -135,26 +175,78 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   
   diffResults <- treatmentResultsTable
   diffResults$Value <- treatmentResultsTable$Value - controlResultsTable$Value
-  # diffResults$Name <- diffResults$diffName
-  # diffResults$Notes <- diffResults$diffNotes
-  
+
   diffResults$TreatmentValue <- treatmentResultsTable$Value
   diffResults$ControlValue <- controlResultsTable$Value
   diffResults$Percent <- 100*((treatmentResultsTable$Value/controlResultsTable$Value)-1)
   
-  diffResultsToShow <- diffResults
+  diffResultsToShow <- diffResults 
   
   diffResultsToShow$Value <- mapply(function(s,f){sprintf(f,s)}, diffResults$Value, diffResults$formatString) 
   
   diffResultsToShow$Value[[1]] <- paste0(format(as.numeric(diffResultsToShow$Value[[1]]), big.mark=","),"$")
   diffResultsToShow <- diffResultsToShow %>%  select(Name, Value)
   
+  ########################
+  
+  controlParamsTable <- controlTables$tableParams
+  treatmentParamsTable <- treatmentTables$tableParams
+
+  diffParams <- treatmentParamsTable
+  diffParams$Value <- treatmentParamsTable$Value - controlParamsTable$Value
+  
+
+  diffParams$TreatmentValue <- treatmentParamsTable$Value
+  diffParams$ControlValue <- controlParamsTable$Value
+  diffParams$Percent <- 100*((treatmentParamsTable$Value/controlParamsTable$Value)-1)
+  
+  
+  diffParamsToShow <- diffParams %>%  filter(Value != 0)
+  
+  diffParamsToShow$Value <- mapply(function(s,f){sprintf(f,s)}, diffParamsToShow$Value, diffParamsToShow$formatString) 
+  
+  
+  
+  diffBasicTable <- diffParamsToShow %>%  filter(paramType == "basic")  %>%  select(Name, Value)
+  diffTestTable <- diffParamsToShow %>%  filter(paramType == "test") %>% select(Name, Value)
+  diffPopsocTable <- diffParamsToShow %>%  filter(paramType == "popsoc") %>% select(Name, Value)
+  diffExtraTable <- diffParamsToShow %>%  filter(paramType == "extra") %>% select(Name, Value)
+  
+  diffParamsTables <- list(
+    diffBasicTable = diffBasicTable,
+    diffTestTable = diffTestTable,
+    diffPopsocTable = diffPopsocTable,
+    diffExtraTable = diffExtraTable)
+  
+  
+  
+  ################################################
+  # repackage original ctrl and treatment for reporting
+  ################################################
+  controlReportData <- list(
+    table = controlData$table,
+    paramTable = controlData$paramTable,
+    reportCharts = controlData$charts
+  )
+  
+  treatmentReportData <- list(
+    table = treatmentData$table,
+    paramTable = treatmentData$paramTable,
+    reportCharts = treatmentData$charts
+  )
   
   ################################################
   # End
   ################################################
   
-  return(list(diffTrajectoryChart = diffTrajectoryChart, diffPositivityChart = diffPositivityChart, diffResultsTable = diffResultsToShow))
+  return(list(diffTrajectoryChart = diffTrajectoryChart,
+              diffPositivityChart = diffPositivityChart,
+              diffTrajectoryGGPlot = diffTrajectoryGGPlot,
+              diffOccupancyGGPlot = diffOccupancyGGPlot,
+              diffResultsTable = diffResultsToShow,
+              diffParamsTables = diffParamsTables,
+              controlReportData = controlReportData, 
+              treatmentReportData = treatmentReportData))
   
   
 }

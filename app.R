@@ -22,6 +22,19 @@ source("singleFunction.R")
 source("diffVizFunction.R")
 source("ui.R")
 
+
+
+# load model functions
+source("contactMatrixTransmission.R")
+source("contactTracing.R")
+source("Model.R")
+
+# load parameter setup functions
+source("ParameterSetup.R")
+source("vizFunction.R")
+source("Visualization.R")
+
+
 server <- function(input, output, session){
    
    
@@ -30,6 +43,8 @@ server <- function(input, output, session){
    session$allowReconnect("force") # this will stop it going grey, we hope
    
    fileNameList <- list(ctrl = "", trt = "")
+   
+   pdfList <- list(ctrl = "", trt = "", csl = "")
    
    ###########################################
    # Scenario Tab
@@ -163,13 +178,13 @@ server <- function(input, output, session){
    
    
    observeEvent(input$clearSaves, {
-      print(fileNameList$ctrl)
-      print(fileNameList$ctrl)
+      # print(fileNameList$ctrl)
+      # print(fileNameList$ctrl)
       if (file.exists(fileNameList$ctrl)){
-         print("A")
+         # print("A")
          file.remove(fileNameList$ctrl)}
       if (file.exists(fileNameList$trt)) {
-         print("B")
+         # print("B")
          file.remove(fileNameList$trt)} 
    })
    
@@ -190,7 +205,6 @@ server <- function(input, output, session){
    causalEffectData <- eventReactive(
          eventExpr = {input$tabs  == "Causal Effect"}, 
          valueExpr = {
-            print("Button Pressed")
             
             if (!file.exists(fileNameList$ctrl) ||!file.exists(fileNameList$trt) ){
                showModal(modalDialog(
@@ -198,12 +212,75 @@ server <- function(input, output, session){
                   "Please Save Scenarios as Control and/or Treatment in the Single Scenario Tab"
                ))
             } else {
-               print("All Good")
                diffVizFunction(controlFile = fileNameList$ctrl, treatmentFile = fileNameList$trt)
                   
             }
          }
       )
+   
+   output$downloadComparisonData <- downloadHandler(
+      filename = function(){"fullCausalReport.pdf"},
+      content = function(file){
+         
+         if (!dir.exists("pdfs/")){dir.create("pdfs/")} 
+         
+         
+         controlReport <- paste0(session.id(), "Control.pdf")
+         treatmentReport <- paste0(session.id(), "Treatment.pdf")
+         causalReport <- paste0(session.id(), "Causal.pdf")
+         
+         pdfList$ctrl <<- paste0("pdfs/", controlReport)
+         pdfList$trt <<- paste0("pdfs/", treatmentReport)
+         pdfList$csl <<- paste0("pdfs/", causalReport)
+         
+         tempReport1 <- file.path(tempdir(), "LiteReport.Rmd")
+         tempReport2 <- file.path(tempdir(), "LiteReport.Rmd")
+         tempReport3 <- file.path(tempdir(), "DiffReport.Rmd")
+         
+         file.copy("LiteReport.Rmd", tempReport1, overwrite = TRUE)
+         file.copy("LiteReport.Rmd", tempReport2, overwrite = TRUE)
+         file.copy("DiffReport.Rmd", tempReport3, overwrite = TRUE)
+         
+         # Set up parameters to pass to Rmd document
+         params1 <- list(table = causalEffectData()$controlReportData$table,
+                         ggCharts = causalEffectData()$controlReportData$reportCharts,
+                         paramTable = causalEffectData()$controlReportData$paramTable)
+         
+         params2 <- list(table = causalEffectData()$treatmentReportData$table,
+                         ggCharts = causalEffectData()$treatmentReportData$reportCharts,
+                         paramTable = causalEffectData()$treatmentReportData$paramTable)
+         
+         params3 <- list(diffResultsTable = causalEffectData()$diffResultsTable,
+                         diffParamsTables = causalEffectData()$diffParamsTables,
+                         diffTrajectoryGGPlot = causalEffectData()$diffTrajectoryGGPlot,
+                         diffOccupancyGGPlot = causalEffectData()$diffOccupancyGGPlot)
+         
+         rmarkdown::render(tempReport1, output_file = controlReport,
+                           output_dir = "pdfs/",
+                           params = params1,
+                           envir = new.env(parent = globalenv()))       
+         
+         
+         rmarkdown::render(tempReport2, output_file = treatmentReport,
+                           output_dir = "pdfs/",
+                           params = params2,
+                           envir = new.env(parent = globalenv()))       
+         
+         
+         rmarkdown::render(tempReport3, output_file = causalReport,
+                           output_dir = "pdfs/",
+                           params = params3,
+                           envir = new.env(parent = globalenv()))
+         
+         
+         pdf_combine(input = list(
+            pdfList$csl,
+            pdfList$ctrl,
+            pdfList$trt), output = file)
+         }
+   )
+   
+   
    
    output$comparisonPlot <- renderPlotly(
       subplot(causalEffectData()$diffTrajectoryChart, causalEffectData()$diffPositivityChart, titleX = TRUE, titleY = TRUE, margin = .05) %>% 
@@ -227,6 +304,17 @@ server <- function(input, output, session){
 
       if (file.exists(fileNameList$trt)) {
          file.remove(fileNameList$trt)}
+      
+      if (file.exists(pdfList$csl)){
+         
+         file.remove(pdfList$csl)}
+      
+      if (file.exists(pdfList$ctrl)){
+         file.remove(pdfList$ctrl)}
+      
+      if (file.exists(pdfList$trt)){
+         file.remove(pdfList$trt)}
+      
    })
 
 }
