@@ -237,16 +237,9 @@ server <- function(input, output, session){
    causalEffectData <- eventReactive(
          eventExpr = {input$tabs  == "Causal Effect"}, 
          valueExpr = {
-            
-            if (!file.exists(fileNameList$ctrl) ||!file.exists(fileNameList$trt) ){
-               showModal(modalDialog(
-                  title = "Error",
-                  "Please Save Scenarios as Control and/or Treatment in the Single Scenario Tab"
-               ))
-            } else {
-               diffVizFunction(controlFile = fileNameList$ctrl, treatmentFile = fileNameList$trt)
-                  
-            }
+            validate(need(file.exists(fileNameList$ctrl) && file.exists(fileNameList$trt),
+                          "Please Save Scenarios as Control and/or Treatment in the Single Scenario Tab"))
+            diffVizFunction(controlFile = fileNameList$ctrl, treatmentFile = fileNameList$trt)
          }
       )
    
