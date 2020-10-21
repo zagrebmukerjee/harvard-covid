@@ -6,7 +6,7 @@ dashboardLogo <- shinyDashboardLogoDIY(
   boldText = "CovidU"
   ,mainText = "by Harvard IQSS"
   ,textSize = 20
-  ,badgeText = "v.1"
+  ,badgeText = "v.2"
   ,badgeTextColor = "white"
   ,badgeTextSize = 2
   ,badgeBackColor = "#aaaaaa"
@@ -32,12 +32,15 @@ dashboardTheme <- shinyDashboardThemeDIY(
   ### header
   ,logoBackColor = "#A51C30"
   
-  ,headerButtonBackColor = "rgb(255,255,255)"
-  ,headerButtonIconColor = "rgb(75,75,75)"
+  # ,headerButtonBackColor = "rgb(255,255,255)"
+  # ,headerButtonIconColor = "rgb(75,75,75)"
+  ,headerButtonBackColor = "#A51C30"
+  ,headerButtonIconColor = "rgb(210,210,210)"
   ,headerButtonBackColorHover = "rgb(210,210,210)"
   ,headerButtonIconColorHover = "rgb(0,0,0)"
   
-  ,headerBackColor = "rgb(255,255,255)"
+  # ,headerBackColor = "rgb(255,255,255)"
+  ,headerBackColor = "#A51C30"
   ,headerBoxShadowColor = "#aaaaaa"
   ,headerBoxShadowSize = "2px 2px 2px"
   
@@ -130,7 +133,29 @@ ui <- dashboardPage(
   
   dashboardHeader(
     title = dashboardLogo,
-    titleWidth = 350
+    titleWidth = 350,
+    dropdownMenu(type = "notifications", 
+                 headerText = strong("HELP"), 
+                 icon = icon("question"), 
+                 badgeStatus = NULL,
+                 tags$li(
+                   tags$ul(
+                     tags$li("Use the buttons on the left to configure a scenario, and then press \"Recompute\" to display the scenario results."),
+                     tags$li("After defining a scenario, you can also get a PDF report with more details on the scenario parameters and outcomes."),
+                     tags$li("To examine causal effects of changes, you can define Treatment and Control scenarios, save them on the main tab, and then use the \"Causal Effects\" tab to see differences in outcomes."),
+                     tags$li("On the Causal Effects tab, you can download a PDF report with details on the treatment scenario, the control scenario, and differences between them.")
+                   )
+                 )
+    ),
+    tags$li(
+      a(
+        strong("ABOUT CovidU"),
+        height = 40,
+        href = "https://github.com/zagrebmukerjee/harvard-covid/blob/master/README.md",
+        title = ""
+      ),
+      class = "dropdown"
+    )
   ),
   ###########################################
   # Sidebar
