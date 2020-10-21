@@ -47,6 +47,38 @@ server <- function(input, output, session){
    pdfList <- list(ctrl = "", trt = "", csl = "")
    
    ###########################################
+   # General stuff
+   ###########################################
+   
+   observeEvent("", {
+      showModal(modalDialog(
+         includeHTML("introPopup.html"),
+         easyClose = TRUE
+      ))
+   })
+
+   onStop(function(){
+      if (file.exists(fileNameList$ctrl)){
+         file.remove(fileNameList$ctrl)}
+      
+      if (file.exists(fileNameList$trt)) {
+         file.remove(fileNameList$trt)}
+      
+      if (file.exists(pdfList$csl)){
+         
+         file.remove(pdfList$csl)}
+      
+      if (file.exists(pdfList$ctrl)){
+         file.remove(pdfList$ctrl)}
+      
+      if (file.exists(pdfList$trt)){
+         file.remove(pdfList$trt)}
+      
+   })
+   
+   
+   
+   ###########################################
    # Scenario Tab
    ###########################################
    
@@ -298,25 +330,10 @@ server <- function(input, output, session){
          class = 'order-column cell-border hover',
       )})
    
-   onStop(function(){
-      if (file.exists(fileNameList$ctrl)){
-         file.remove(fileNameList$ctrl)}
-
-      if (file.exists(fileNameList$trt)) {
-         file.remove(fileNameList$trt)}
-      
-      if (file.exists(pdfList$csl)){
-         
-         file.remove(pdfList$csl)}
-      
-      if (file.exists(pdfList$ctrl)){
-         file.remove(pdfList$ctrl)}
-      
-      if (file.exists(pdfList$trt)){
-         file.remove(pdfList$trt)}
-      
-   })
-
+   
+   
+   
+   
 }
 
 

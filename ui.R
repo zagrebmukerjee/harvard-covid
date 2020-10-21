@@ -142,10 +142,16 @@ ui <- dashboardPage(
   introBox(data.step = 3, data.intro = "Compute button",
            div(style="display:inline-block",
                actionButton(inputId = "recomputeButton",
-                 label = "Recompute",
-                 icon("play-circle")
+                            label = "Recompute",
+                            icon("play-circle")
+               ),
+               bsTooltip(
+                 "recomputeButton", 
+                 "After defining scenario parameters, press here to compute and display results",
+                 placement = "bottom", 
+                 trigger = "hover"
                )
-
+               
            ),
            div(style="display:inline-block",
                downloadButton(
@@ -153,8 +159,15 @@ ui <- dashboardPage(
                  label = "Get Detailed Report",
                  icon = icon("download"),
                  style = "color: black; margin-left: 10px;"
-               ))
-          ),
+               ),
+               bsTooltip(
+                 "downloadData", 
+                 "After defining a scenario, press here to get a detailed PDF report of outcomes",
+                 placement = "bottom", 
+                 trigger = "hover"
+               )
+           )
+  ),
   br(),
   sidebarMenu( id = "sidebar",
     menuItem(
@@ -473,13 +486,31 @@ ui <- dashboardPage(
                    icon("file-export")
                    
       ),
+      bsTooltip(
+        "saveControl", 
+        "Save a Control scenario as a baseline for a causal effect estimate",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
       actionButton(inputId = "saveTreatment",
                    label = "Save As Treatment",
                    icon("file-export")
       ),
+      bsTooltip(
+        "saveTreatment", 
+        "Save a Treatment scenario to estimate the causal effect of a change",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
       actionButton(inputId = "clearSaves",
                    label = "Clear Saved States",
                    icon("trash-alt")
+      ),
+      bsTooltip(
+        "clearSaves", 
+        "Delete saved Control and Treatment",
+        placement = "bottom", 
+        trigger = "hover"
       )
     )
     
@@ -494,34 +525,32 @@ ui <- dashboardPage(
     dashboardTheme,
     tabsetPanel(id = "tabs",
       tabPanel("Single Scenario", 
-        tags$strong("Please Wait for Computation before Downloading Report"),
-        tags$header(tags$strong("How To Use:"), "The menu to the left allows you to set some parameters of the model - hit \"Recompute\" when finished (it's pre-populated with what we think is a moderately conservative scenario with frequent testing). "),
-        tags$header("You can also download a detailed PDF report on your chosen scenario."),
         fluidRow(
           box(width=15, plotlyOutput('plot'))),
         fluidRow(
           box(width=15, DT::dataTableOutput("tabledata"))),
-        tags$footer(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."),
         br()
       ),
       tabPanel("Causal Effect",
                div(style="display:inline-block",
-                   # actionButton(
-                   #   inputId = "compareButton",
-                   #   label = "Generate Comparison Report",
-                   #   icon("play-circle")),
                    downloadButton(
                      outputId = "downloadComparisonData",
                      label = "Get Causal Effect Report",
                      icon = icon("download"),
                      style = "color: black; margin-left: 10px;"
                    ),
-                   style="float:center"),
+                   bsTooltip(
+                     "downloadComparisonData", 
+                     "After defining an experiment, press here to get a detailed PDF report on control, treatment, and causal effects",
+                     placement = "bottom", 
+                     trigger = "hover"
+                   )
+               ),
                fluidRow(
                  box(width=15, plotlyOutput('comparisonPlot'))),
                fluidRow(
-                 box(width=15, DT::dataTableOutput("comparisonTabledata"))),
-               tags$footer(tags$strong("Caveat:"),"This model is an illustrative tool, and is not meant to generate accurate predictions. Many simplifying assumptions have been made in order to highlight a few important dynamics."),
+                 box(width=15, DT::dataTableOutput("comparisonTabledata")))
+               
       )
     )
   )
