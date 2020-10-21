@@ -187,7 +187,7 @@ ui <- dashboardPage(
                ),
                bsTooltip(
                  "downloadData", 
-                 "After defining a scenario, press here to get a detailed PDF report of outcomes",
+                 "After defining a scenario, press here to get a detailed PDF report of outcomes  - it will take a few seconds",
                  placement = "bottom", 
                  trigger = "hover"
                )
@@ -551,12 +551,13 @@ ui <- dashboardPage(
     tabsetPanel(id = "tabs",
       tabPanel("Single Scenario", 
         fluidRow(
-          box(width=15, plotlyOutput('plot'))),
+          box(width=15, plotlyOutput('plot') %>%  withSpinner(type = 1, color = "#505050"))) ,
         fluidRow(
-          box(width=15, DT::dataTableOutput("tabledata"))),
+          box(width=15, DT::dataTableOutput("tabledata") %>%  withSpinner(type = 1, color = "#505050"))),
         br()
       ),
       tabPanel("Causal Effect",
+               br(),
                div(style="display:inline-block",
                    downloadButton(
                      outputId = "downloadComparisonData",
@@ -566,15 +567,15 @@ ui <- dashboardPage(
                    ),
                    bsTooltip(
                      "downloadComparisonData", 
-                     "After defining an experiment, press here to get a detailed PDF report on control, treatment, and causal effects",
+                     "After defining an experiment, press here to get a detailed PDF report on control, treatment, and causal effects - it will take a few seconds",
                      placement = "bottom", 
                      trigger = "hover"
                    )
                ),
                fluidRow(
-                 box(width=15, plotlyOutput('comparisonPlot'))),
+                 box(width=15, plotlyOutput('comparisonPlot') %>%  withSpinner(type = 1, color = "#505050"))),
                fluidRow(
-                 box(width=15, DT::dataTableOutput("comparisonTabledata")))
+                 box(width=15, DT::dataTableOutput("comparisonTabledata") %>%  withSpinner(type = 1, color = "#505050")))
                
       )
     )

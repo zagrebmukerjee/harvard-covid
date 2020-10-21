@@ -129,8 +129,7 @@ server <- function(input, output, session){
    
    output$plot <- renderPlotly(
       subplot(funList()$chart, funList()$positivityChart, titleX = TRUE, titleY = TRUE, margin = .05) %>% 
-         layout(showlegend = FALSE, title = "Disease Trajectory & Positivity Rate") #%>%
-         # layout(height = 400, width = 800)
+         layout(showlegend = FALSE, title = "Disease Trajectory & Positivity Rate") 
    )
    
    
