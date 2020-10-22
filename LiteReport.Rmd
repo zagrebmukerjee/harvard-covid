@@ -36,7 +36,7 @@ options(warn = -1)
 
 ```
 
-## CovidU: Detailed Report ^[Contact: Gary King <king@harvard.edu>, Zagreb Mukerjee <zagrebmukerjee@fas.harvard.edu>] 
+## CovidU: Detailed Report ^[This report was generated using the CovidU app, from Harvard IQSS. For more information, see iq.harvard.edu/covidu] 
 
 ### Summary
 
@@ -70,7 +70,7 @@ params$paramTable$extraTable%>% kable(align = "lcr", row.names = FALSE, col.name
   
 
 ```{r charts, echo = FALSE, fig.height=3.75}
-grid.arrange(params$ggCharts$trajectoryGGPlot, params$ggCharts$occupancyGGPlot, ncol = 2)
+grid.arrange(params$ggCharts$trajectoryGGPlot, params$ggCharts$positivityGGPlot, ncol = 2)
 ```
 
 

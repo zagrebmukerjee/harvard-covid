@@ -111,7 +111,7 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   diffPositivityChart <- plot_ly(data = diffPosData, x = ~day, y = ~testPositivity, name = "Test Positivity", 
                              type = "scatter", mode = "lines", line = list(color = clrs1[[1]]))  %>%
     add_trace(y = ~trueTestPositivity, name = "True Test Positivity", line = list( color = clrs1[[2]])) %>%
-    layout(yaxis = list(title = "Positivity", range = yRangePos, tickformat = '%'), xaxis = list(title = "Day", range = xRange), legend = list(x = 0, y = 1.2, orientation = 'h'),
+    layout(yaxis = list(title = "Difference in Positivity", range = yRangePos, tickformat = '%'), xaxis = list(title = "Day", range = xRange), legend = list(x = 0, y = 1.2, orientation = 'h'),
            font = list(size = 11), showlegend = FALSE) 
   
   
@@ -130,25 +130,23 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   # Generate diff charts for reports 
   ################################################
   
-  yRangeTraj <- c(1.1*min(
-    min(diffOutputData$allRecovered),min(diffOutputData$infected)), 1.1*max(max(diffOutputData$allRecovered),max(diffOutputData$infected)))
-  yRangeOcc <-c(1.4*min(diffOutputData$bedsUsed),
-                1.4*max(diffOutputData$bedsUsed))
+  # yRangeTraj <- c(1.1*min(
+    # min(diffOutputData$allRecovered),min(diffOutputData$infected)), 1.1*max(max(diffOutputData$allRecovered),max(diffOutputData$infected)))
   
-  diffChartDataReshape <- diffOutputData %>%  select(Day = day, 
-                                            Infected = infected,
-                                            Recovered = allRecovered, bedsUsed, 
-                                            `False Positives` = falsePositives, 
-                                            `False Positives (Recovered)` = immuneFPs,
-                                            `True Positives (Asymp)` = truePositives, 
-                                            `True Positives (Symp)` = symptomatic) %>% melt(id = "Day")
-  trajData <- diffChartDataReshape %>%  filter(variable %in% c("Infected", "Recovered"))
-  occData <- diffChartDataReshape %>%  filter(variable %in% c("False Positives", "False Positives (Recovered)", "True Positives (Asymp)", "True Positives (Symp)"))
+  diffChartDataReshape <- diffOutputData %>%  left_join(diffPosData) %>% 
+    select(Day = day, 
+           Infected = infected,
+           Recovered = allRecovered, 
+           `Beds Used` = bedsUsed, 
+           `Total Positive Tests` = testPositivity , 
+           `True Positive Tests` = trueTestPositivity) %>% melt(id = "Day")
+  trajDataGG <- diffChartDataReshape %>%  filter(variable %in% c("Infected", "Recovered", "Beds Used"))
+  posDataGG <- diffChartDataReshape %>%  filter(variable %in% c("Total Positive Tests", "True Positive Tests"))
   
   
-  diffTrajectoryGGPlot <- ggplot(data = trajData, aes(x = Day, y = value, colour = variable)) + 
+  diffTrajectoryGGPlot <- ggplot(data = trajDataGG, aes(x = Day, y = value, colour = variable)) + 
     geom_line(size = 1) +
-    scale_colour_manual(values = clrs1[1:2]) + theme_bw() + ylab(yaxisString) +
+    scale_colour_manual(values = clrs1[1:3]) + theme_bw() + ylab(yaxisString) +
     scale_x_continuous(limits = xRange, expand = c(0, 0)) + scale_y_continuous(limits = yRangeTraj, expand = c(0,0))  +
     theme(legend.position = c(0.2, 0.9), legend.title = element_blank(), legend.text = element_text(size = 6), legend.key.size = unit(.15,"inches"),
           panel.border = element_blank(),
@@ -156,10 +154,11 @@ diffVizFunction <- function(controlFile, treatmentFile ){
           axis.title.x = element_text(size = 8, margin = margin(t = 10, b = 0, r = 0, l = 0))) 
   
   
-  diffOccupancyGGPlot <- ggplot(data = occData, aes(x = Day, y = value, colour = variable)) +
+  diffPositivityGGPlot <- ggplot(data = posDataGG, aes(x = Day, y = value, colour = variable)) +
     geom_line(size = 1)  +
-    scale_colour_manual(values = clrs2[4:1]) + theme_bw() + ylab("Beds Used") +
-    scale_x_continuous(limits = xRange, expand = c(0, 0)) + scale_y_continuous(limits = yRangeOcc, expand = c(0,0))  +
+    scale_colour_manual(values = clrs1[1:2]) + theme_bw() + ylab("Difference in Positivity") +
+    scale_x_continuous(limits = xRange, expand = c(0, 0)) + 
+    scale_y_continuous(limits = yRangePos, expand = c(0,0), labels = scales::percent)  +
     theme(legend.position = c(0.25, 0.85), legend.title = element_blank(), legend.text = element_text(size = 6), legend.key.size = unit(.15,"inches"),
           panel.border = element_blank(),
           axis.title.y = element_text(size = 8, margin = margin(t = 0, b = 0, r = 10, l = 0)),
@@ -242,7 +241,7 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   return(list(diffTrajectoryChart = diffTrajectoryChart,
               diffPositivityChart = diffPositivityChart,
               diffTrajectoryGGPlot = diffTrajectoryGGPlot,
-              diffOccupancyGGPlot = diffOccupancyGGPlot,
+              diffPositivityGGPlot = diffPositivityGGPlot,
               diffResultsTable = diffResultsToShow,
               diffParamsTables = diffParamsTables,
               controlReportData = controlReportData, 

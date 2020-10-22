@@ -101,7 +101,7 @@ campusSIRFunction <- function(
       
       #charts <- chartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)
       tables <- tableFunction(tableData = outputData, tableParameters = testParameters, tableDiags = diagnosticNumbers)
-      ggCharts <- ggPlotChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)
+      ggCharts <- ggPlotChartingFunction(chartData = outputData, chartDiags = diagnosticNumbers,  chartParameters = testParameters, annotations = TRUE)
       
       formattedResultsTable <- formattedResultsTableFunction(tables$keyResults %>%  filter(!(Name %in% c("Accurate Contact Traces", "Total Quarantine Entries")))) 
       chartDisplay <- dashboardChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)$dashboard

@@ -277,7 +277,7 @@ server <- function(input, output, session){
          params3 <- list(diffResultsTable = causalEffectData()$diffResultsTable,
                          diffParamsTables = causalEffectData()$diffParamsTables,
                          diffTrajectoryGGPlot = causalEffectData()$diffTrajectoryGGPlot,
-                         diffOccupancyGGPlot = causalEffectData()$diffOccupancyGGPlot)
+                         diffPositivityGGPlot = causalEffectData()$diffPositivityGGPlot)
          
          rmarkdown::render(tempReport1, output_file = controlReport,
                            output_dir = "pdfs/",
@@ -308,7 +308,7 @@ server <- function(input, output, session){
    
    output$comparisonPlot <- renderPlotly(
       subplot(causalEffectData()$diffTrajectoryChart, causalEffectData()$diffPositivityChart, titleX = TRUE, titleY = TRUE, margin = .05) %>% 
-         layout(showlegend = FALSE, title = "Disease Trajectory & Positivity Rate") #%>%
+         layout(showlegend = FALSE, title = "Differences in Disease Trajectory & Positivity Rate") #%>%
       # layout(height = 400, width = 800)
    )
    

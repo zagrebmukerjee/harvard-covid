@@ -24,7 +24,7 @@ params:
   diffResultsTable: NA
   diffParamsTables: NA
   diffTrajectoryGGPlot: NA
-  diffOccupancyGGPlot: NA
+  diffPositivityGGPlot: NA
 ---
 
 ```{r intro, include=FALSE}
@@ -37,19 +37,19 @@ options(warn = -1)
 
 ```
 
-## CovidU: Comparison Report ^[Contact: Gary King <king@harvard.edu>, Zagreb Mukerjee <zagrebmukerjee@fas.harvard.edu>] 
+## CovidU: Comparison Report ^[This report was generated using the CovidU app, from Harvard IQSS. For more information, see iq.harvard.edu/covidu] 
 
-Parameters not listed are held constant, as described on pages 2 and 3
+Parameters not listed on this page are held constant at values listed on pages 2 and 3.
 
-### Changes in Parameters 
 
+`r   if(nrow(params$diffParamsTables$diffBasicTable) > 0) {"**Changes in Basic Parameters**"} else {""}`
 ```{r basicTable, echo = FALSE,comment=NA,background=NA}
 if(nrow(params$diffParamsTables$diffBasicTable) > 0){  
   params$diffParamsTables$diffBasicTable %>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
     kable_styling(latex_options = c("striped"), font_size = 8, position = "center")
 }
 ```
-**Changes in Testing and Costs**
+`r   if(nrow(params$diffParamsTables$diffTestTable) > 0) {"**Changes in Testing Assumptions**"} else {""}`
 ```{r testTable, echo = FALSE,comment=NA,background=NA}
 if(nrow(params$diffParamsTables$diffTestTable) > 0){  
   params$diffParamsTables$diffTestTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
@@ -57,7 +57,7 @@ if(nrow(params$diffParamsTables$diffTestTable) > 0){
 }
 
 ```
-**Changes in Population and Social**
+`r   if(nrow(params$diffParamsTables$diffPopsocTable) > 0) {"**Changes in Population and Social Assumptions**"} else {""}`
 ```{r popsocTable, echo = FALSE,comment=NA,background=NA}
 if(nrow(params$diffParamsTables$diffPopsocTable) > 0){  
   params$diffParamsTables$diffPopsocTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
@@ -65,7 +65,7 @@ if(nrow(params$diffParamsTables$diffPopsocTable) > 0){
 }
 
 ```
-**Changes in Extra  Assumptions**
+`r   if(nrow(params$diffParamsTables$diffExtraTable) > 0) {"**Changes in Additional Assumptions**"} else {""}`
 ```{r extraTable, echo = FALSE,comment=NA,background=NA}
 if(nrow(params$diffParamsTables$diffExtraTable) > 0){  
   params$diffParamsTables$diffExtraTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
@@ -85,7 +85,7 @@ params$diffResultsTable %>% kable(align = "lc", row.names = FALSE, col.names = N
     
 
 ```{r charts, echo = FALSE, fig.height=3.75}
-grid.arrange(params$diffTrajectoryGGPlot, params$diffOccupancyGGPlot, ncol = 2)
+grid.arrange(params$diffTrajectoryGGPlot, params$diffPositivityGGPlot, ncol = 2)
 ```
 
 
