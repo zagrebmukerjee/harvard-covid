@@ -1,0 +1,3 @@
+#!/bin/bash
+apt-get -y update
+cat Aptfile | xargs apt-get -qy install
