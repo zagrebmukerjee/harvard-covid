@@ -234,6 +234,16 @@ diffVizFunction <- function(controlFile, treatmentFile ){
     reportCharts = treatmentData$charts
   )
   
+  
+  ################################################
+  # Generate automatic text summary
+  ################################################
+  
+  summaryString <- ""
+  treatmentString <- ""
+  controlString <- ""
+  
+  
   ################################################
   # End
   ################################################
