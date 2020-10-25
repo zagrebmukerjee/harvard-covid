@@ -277,7 +277,8 @@ server <- function(input, output, session){
          params3 <- list(diffResultsTable = causalEffectData()$diffResultsTable,
                          diffParamsTables = causalEffectData()$diffParamsTables,
                          diffTrajectoryGGPlot = causalEffectData()$diffTrajectoryGGPlot,
-                         diffPositivityGGPlot = causalEffectData()$diffPositivityGGPlot)
+                         diffPositivityGGPlot = causalEffectData()$diffPositivityGGPlot,
+                         autoTextStrings = causalEffectData()$autoTextStrings)
          
          rmarkdown::render(tempReport1, output_file = controlReport,
                            output_dir = "pdfs/",

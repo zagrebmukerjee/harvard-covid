@@ -513,7 +513,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "saveControl", 
-        "Save a Control scenario as a baseline for a causal effect estimate",
+        "Save a Control scenario as a baseline for a causal effect estimate - make sure to recompute first",
         placement = "bottom", 
         trigger = "hover"
       ),
@@ -523,7 +523,7 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "saveTreatment", 
-        "Save a Treatment scenario to estimate the causal effect of a change",
+        "Save a Treatment scenario to estimate the causal effect of a change - make sure to recompute first",
         placement = "bottom", 
         trigger = "hover"
       ),

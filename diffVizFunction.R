@@ -244,6 +244,94 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   controlString <- ""
   
   
+  paramColumnsWithDifference <- (
+    diffParamsToShow %>% filter(!(paramType %in% c("noshow")))
+  )$shortName
+  treatmentParamValues <- treatmentData$rawTables$tableParams %>%  filter(shortName %in% paramColumnsWithDifference)
+  controlParamValues <- controlData$rawTables$tableParams %>%  filter(shortName %in% paramColumnsWithDifference)
+  
+
+  if(length(paramColumnsWithDifference) != 0){
+    
+    diffResultsForString <- diffResults %>% 
+      filter(Name %in% c(
+        "Testing Cost",
+        "Total Isolation Entries",
+        "Total Students Symptomatic"
+      ))
+    
+    tmpParams <- function(r){
+      
+      if((r$shortName %in% (c("runSerologyTest", "pooledTests", "runContactTracing", "parties"))) && r$Value == 0){r$textAdd <- paste0("no ", r$textAdd)} 
+      formattedValue <- sprintf(r$diffFormat, r$Value)
+      stringToShow <- paste0(r$textBefore, ifelse(nchar(r$textBefore) > 0, " ", ""), formattedValue, ifelse(nchar(r$textAdd) > 0, " ", ""), r$textAdd)
+      
+    }
+    
+    tmpResults <- function(r){
+      
+      
+      compareStr <- ifelse(r$Value > 0, paste0(r$compareG, " "), ifelse(r$Value < 0, paste0(r$compareL, " "), ""))
+      transformedValue <- eval(parse(text = paste0("(", r$diffTransform, ")","(",r$Value,")")))
+      formattedValue <- sprintf(r$formatString, transformedValue)
+      displayValue <- ifelse(r$Value == 0, r$compareS, formattedValue)
+      
+      if(r$specialDisplay == "Percent"){
+        
+        percentCompare <-  ifelse(r$Value > 0, "more", ifelse(r$Value < 0, "less", ""))
+        
+        r$textAdd <- paste0(r$textAdd, " (", sprintf("%0.0f%%", r$Percent)," ", percentCompare, ")")
+        
+      }
+      if(r$specialDisplay == "ShowBoth"){
+        
+        treatmentValue <- sprintf(r$formatString, r$TreatmentValue)
+        controlValue <- sprintf(r$formatString, r$ControlValue)
+        compareStrBoth <- ifelse(r$Value > 0, "increase", ifelse(r$Value < 0, "decrease", ""))
+        
+        
+        r$textAdd <- paste0(r$textAdd," (an ", compareStrBoth, " from ", controlValue, " to ", treatmentValue, ")")
+        
+      }
+      
+      
+      stringToShow <- paste0(displayValue, " ",compareStr, r$textAdd)
+      
+    }
+    
+    
+    autoStringsParamsTreatment <- lapply(X = split(treatmentParamValues, seq(nrow(treatmentParamValues))), FUN = tmpParams)
+    autoStringsParamsControl <- lapply(X = split(controlParamValues, seq(nrow(controlParamValues))), FUN = tmpParams)
+    autoStringsResults <- lapply(X = split(diffResultsForString, seq(nrow(diffResultsForString))), FUN = tmpResults)
+    
+    treatmentString <- Reduce(x = autoStringsParamsTreatment, f = function(a,b){paste0(a, ", ", b)})
+    treatmentString <- paste0("**Treatment**: ", treatmentString)
+    treatmentString <- paste0(gsub("\\s+"," ",treatmentString), ".  (Details on Page 2)  \n")
+    
+    controlString <- Reduce(x = autoStringsParamsControl, f = function(a,b){paste0(a, ", ", b)})
+    controlString <- paste0("**Control**: ", controlString)
+    controlString <- paste0(gsub("\\s+"," ",controlString), ".  (Details on Page 3)  \n")
+    
+    print(treatmentString)
+    print(controlString)
+    
+    takeAwayString <- Reduce(x = autoStringsResults, f = function(a,b){paste0(a, ", ", b)})
+    takeAwayString <- paste0("**Conclusion**: Changing from Control to Treatment shows: ", takeAwayString)
+    takeAwayString <- gsub("\\s+"," ",takeAwayString)
+
+  } else {
+    treatmentString <- "No Parameters Changed"
+    controlString <- "No Parameters Changed"
+    takeAwayString <- "**Conclusion**: No differences between scenarios"
+  }
+  
+  
+  autoTextStrings <- list(
+    treatmentString = treatmentString,
+    controlString = controlString,
+    takeAwayString = takeAwayString
+  )
+  
   ################################################
   # End
   ################################################
@@ -255,7 +343,8 @@ diffVizFunction <- function(controlFile, treatmentFile ){
               diffResultsTable = diffResultsToShow,
               diffParamsTables = diffParamsTables,
               controlReportData = controlReportData, 
-              treatmentReportData = treatmentReportData))
+              treatmentReportData = treatmentReportData,
+              autoTextStrings = autoTextStrings))
   
   
 }
