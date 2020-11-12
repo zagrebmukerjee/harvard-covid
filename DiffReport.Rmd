@@ -25,6 +25,7 @@ params:
   diffParamsTables: NA
   diffTrajectoryGGPlot: NA
   diffPositivityGGPlot: NA
+  autoTextStrings: NA
 ---
 
 ```{r intro, include=FALSE}
@@ -39,8 +40,13 @@ options(warn = -1)
 
 ## CovidU: Comparison Report ^[This report was generated using the CovidU app, from Harvard IQSS. For more information, see iq.harvard.edu/covidu] 
 
+`r "**Scenarios Evaluated:**  \n"`
+`r paste0("|            ", params$autoTextStrings$treatmentString) `
+`r paste0("|            ", params$autoTextStrings$controlString) `
+
 Parameters not listed on this page are held constant at values listed on pages 2 and 3.
 
+`r params$autoTextStrings$takeAwayString `
 
 `r   if(nrow(params$diffParamsTables$diffBasicTable) > 0) {"**Changes in Basic Parameters**"} else {""}`
 ```{r basicTable, echo = FALSE,comment=NA,background=NA}
