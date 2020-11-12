@@ -89,8 +89,8 @@ server <- function(input, output, session){
    observeEvent(input$pop, {updateSliderInput(session, "ssSize", max  = input$pop/5)},
                 ignoreNULL = FALSE)
    
-   observeEvent(input$days, {updateSliderInput(session, "ssDate", max  = input$days)},
-                ignoreNULL = FALSE)
+   # observeEvent(input$days, {updateSliderInput(session, "ssDate", max  = input$days)},
+   #              ignoreNULL = FALSE)
    
 
    
@@ -113,7 +113,6 @@ server <- function(input, output, session){
                                   startingAsymptomatics = input$asymp,
                                   studentPopulation = input$pop,
                                   conditionalInfectionProb = input$infectprob,
-                                  totalDays = input$days,
                                   symptomDevelopmentProportion = input$devsymp,
                                   testingCost = input$cost,
                                   testConfCost = input$confcost,
@@ -158,7 +157,6 @@ server <- function(input, output, session){
             startingAsymptomatics = input$asymp,
             studentPopulation = input$pop,
             conditionalInfectionProb = input$infectprob,
-            totalDays = input$days,
             symptomDevelopmentProportion = input$devsymp,
             testingCost = input$cost,
             testConfCost = input$confcost,

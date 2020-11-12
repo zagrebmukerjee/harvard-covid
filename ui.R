@@ -268,7 +268,7 @@ ui <- dashboardPage(
        trigger = "hover"
      )
     ),
-    
+
     menuItem(
       "Testing and  Costs",
       tabName = "costs",
@@ -342,6 +342,20 @@ ui <- dashboardPage(
       bsTooltip(
         "confcost", 
         "Cost of testing administered on entering isolation",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      sliderInput(
+        inputId = "reldays", 
+        label = "False Positive Release Time",
+        value = 2, 
+        min = 0, 
+        max = 14,
+        post = " days"
+      ),
+      bsTooltip(
+        "reldays", 
+        "Days it takes to release a false positive from isolation",
         placement = "bottom", 
         trigger = "hover"
       )
@@ -438,10 +452,12 @@ ui <- dashboardPage(
       
     ),
 
+    
     menuItem(
-      "More Assumptions",
-      tabName = "advanced",
-      icon = icon("cog"),
+      "Disease Assumptions",
+      tabName = "assumptions",
+      icon = icon("gear"),
+      startExpanded = FALSE,
       sliderInput(
         inputId = "infectprob", 
         label = "Probability of Infection Given Contact",
@@ -457,21 +473,53 @@ ui <- dashboardPage(
         placement = "bottom", 
         trigger = "hover"
       ),
+      
       sliderInput(
-        inputId = "days", 
-        label = "Total Number of Days",
-        value = 80, 
-        min = 0, 
-        max = 200, 
-        step = 10,
-        post = " days"
+        inputId = "rectime", 
+        label = "Days to Recovery",
+        value = 14, 
+        min = 10, 
+        max = 21, 
+        step = 1
       ),
       bsTooltip(
-        "days", 
-        "How many days to run the simulation",
+        "rectime", 
+        "Number of days it takes to recover after becoming infectious",
         placement = "bottom", 
         trigger = "hover"
       ),
+      
+      sliderInput(
+        inputId = "inctime", 
+        label = "Days of Incubation",
+        value = 4, 
+        min = 2, 
+        max = 8, 
+        step = 1
+      ),
+      bsTooltip(
+        "inctime", 
+        "Number of days it takes from being infected to being detectable by tests",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      
+      sliderInput(
+        inputId = "condmort", 
+        label = "Conditional Mortality",
+        value = .05, 
+        min = 0, 
+        max = .1, 
+        step = .01,
+        post = "%"
+      ),
+      bsTooltip(
+        "condmort", 
+        "Probability of death conditional on symptom development (for student population)",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      
       sliderInput(
         inputId = "devsymp", 
         label = "Proportion Developing Symptoms",
@@ -483,25 +531,14 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "devsymp", 
-        "What proportion of those infected develop some degree of symptom",
-        placement = "bottom", 
-        trigger = "hover"
-      ),
-      sliderInput(
-        inputId = "reldays", 
-        label = "False Positive Release Time",
-        value = 2, 
-        min = 0, 
-        max = 14,
-        post = " days"
-      ),
-      bsTooltip(
-        "reldays", 
-        "Days it takes to release a false positive from isolation",
+        "What proportion of those infected develop some degree of symptoms",
         placement = "bottom", 
         trigger = "hover"
       )
     ),
+    
+    
+   
     menuItem(
       "Save for Causal Effect",
       tabName = "save",

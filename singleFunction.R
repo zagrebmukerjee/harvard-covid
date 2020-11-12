@@ -13,7 +13,6 @@ campusSIRFunction <- function(
     startingAsymptomatics, 
     studentPopulation,
     conditionalInfectionProb,
-    totalDays,
     symptomDevelopmentProportion,
     testingCost,
     testConfCost,
@@ -61,7 +60,7 @@ campusSIRFunction <- function(
       scenariosToRun[scenarioNumber, ]$startingAsymptomatics <- startingAsymptomatics
       scenariosToRun[scenarioNumber, ]$startingSusceptible <- studentPopulation - scenariosToRun[scenarioNumber, ]$startingAsymptomatics
       scenariosToRun[scenarioNumber, ]$conditionalInfectionProb <- conditionalInfectionProb/100
-      scenariosToRun[scenarioNumber, ]$nCycles <- totalDays * scenariosToRun[scenarioNumber, ]$cyclesPerDay
+      
       scenariosToRun[scenarioNumber, ]$symptomDevelopmentProportion <- symptomDevelopmentProportion/100
       scenariosToRun[scenarioNumber, ]$testPCRCost <- testingCost
       scenariosToRun[scenarioNumber, ]$testConfCost <- testConfCost
