@@ -215,7 +215,7 @@ ui <- dashboardPage(
         trigger = "hover"
       ),
      sliderInput(
-        inputId = "comm", 
+        inputId = "extInf", 
         label = "External Infections Per Day",
         value = 0.5, 
         min = 0, 
@@ -475,21 +475,6 @@ ui <- dashboardPage(
       ),
       
       sliderInput(
-        inputId = "rectime", 
-        label = "Days to Recovery",
-        value = 14, 
-        min = 10, 
-        max = 21, 
-        step = 1
-      ),
-      bsTooltip(
-        "rectime", 
-        "Number of days it takes to recover after becoming infectious",
-        placement = "bottom", 
-        trigger = "hover"
-      ),
-      
-      sliderInput(
         inputId = "inctime", 
         label = "Days of Incubation",
         value = 4, 
@@ -500,6 +485,21 @@ ui <- dashboardPage(
       bsTooltip(
         "inctime", 
         "Number of days it takes from being infected to being detectable by tests",
+        placement = "bottom", 
+        trigger = "hover"
+      ),
+      
+      sliderInput(
+        inputId = "rectime", 
+        label = "Days to Recovery",
+        value = 14, 
+        min = 5, 
+        max = 21, 
+        step = 1
+      ),
+      bsTooltip(
+        "rectime", 
+        "Number of days it takes to recover after becoming infectious",
         placement = "bottom", 
         trigger = "hover"
       ),

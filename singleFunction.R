@@ -9,7 +9,7 @@ campusSIRFunction <- function(
     testPCRSpecificity, 
     testPCRSensitivity, 
     testingTime, 
-    commInf, 
+    extInf, 
     startingAsymptomatics, 
     studentPopulation,
     conditionalInfectionProb,
@@ -23,7 +23,10 @@ campusSIRFunction <- function(
     partySizeInput,
     partyContactsInput,
     ssDateInput,
-    ssSizeInput
+    ssSizeInput,
+    inctime,
+    rectime,
+    condmort
   ){
 
   
@@ -56,7 +59,7 @@ campusSIRFunction <- function(
       scenariosToRun[scenarioNumber, ]$testingTime <- testingTime
       scenariosToRun[scenarioNumber, ]$testPCRSpecificity <- testPCRSpecificity/100
       scenariosToRun[scenarioNumber, ]$testPCRSensitivity <- testPCRSensitivity/100
-      scenariosToRun[scenarioNumber, ]$exogeneousShockSize <- commInf
+      scenariosToRun[scenarioNumber, ]$exogeneousShockSize <- extInf
       scenariosToRun[scenarioNumber, ]$startingAsymptomatics <- startingAsymptomatics
       scenariosToRun[scenarioNumber, ]$startingSusceptible <- studentPopulation - scenariosToRun[scenarioNumber, ]$startingAsymptomatics
       scenariosToRun[scenarioNumber, ]$conditionalInfectionProb <- conditionalInfectionProb/100
@@ -74,6 +77,12 @@ campusSIRFunction <- function(
       
       scenariosToRun[scenarioNumber, ]$ssEventDate <- ssDateInput
       scenariosToRun[scenarioNumber, ]$ssEventSize <- ssSizeInput
+      
+      
+      scenariosToRun[scenarioNumber, ]$incubationTime <- inctime
+      scenariosToRun[scenarioNumber, ]$recoveryTime <- rectime
+      scenariosToRun[scenarioNumber, ]$conditionalMortality <- condmort/100
+      
       
       
       if(partyRateInput > 0){scenariosToRun[scenarioNumber, ]$parties <- TRUE} else {scenariosToRun[scenarioNumber, ]$parties <- FALSE}

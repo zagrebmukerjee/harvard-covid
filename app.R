@@ -109,7 +109,7 @@ server <- function(input, output, session){
                                   testPCRSpecificity = input$spec,
                                   testPCRSensitivity = input$sens,
                                   testingTime = input$cad,
-                                  commInf = input$comm,
+                                  extInf = input$extInf,
                                   startingAsymptomatics = input$asymp,
                                   studentPopulation = input$pop,
                                   conditionalInfectionProb = input$infectprob,
@@ -123,7 +123,10 @@ server <- function(input, output, session){
                                   partySizeInput = input$partySizeInput,
                                   partyContactsInput = input$partyContactsInput,
                                   ssDateInput = input$ssDate,
-                                  ssSizeInput = input$ssSize)},
+                                  ssSizeInput = input$ssSize,
+                                  inctime = input$inctime,
+                                  rectime = input$rectime,
+                                  condmort = input$condmort)},
                             ignoreNULL = FALSE)
    
    output$plot <- renderPlotly(
@@ -167,7 +170,10 @@ server <- function(input, output, session){
             partySizeInput = input$partySizeInput,
             partyContactsInput = input$partyContactsInput,
             ssDateInput = input$ssDate,
-            ssSizeInput = input$ssSize)})
+            ssSizeInput = input$ssSize,
+            inctime = input$inctime,
+            rectime = input$rectime,
+            condmort = input$condmort)})
          
          
          # Set up parameters to pass to Rmd document
