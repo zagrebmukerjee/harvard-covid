@@ -47,8 +47,8 @@ campusSIRFunction <- function(
       # Overwrite default inputs with inputs from user
       
       # go from r0 to # contacts
-      recoveryRate <- 1/14
-      symptomOnsetRate <- recoveryRate*(.3/(1-.3))
+      recoveryRate <- 1/rectime
+      symptomOnsetRate <- recoveryRate*(symptomDevelopmentProportion/(1-symptomDevelopmentProportion))
       divisor <- recoveryRate + symptomOnsetRate
       contactInfProb <- scenariosToRun[scenarioNumber, ]$conditionalInfectionProb
       beta <- r0 * divisor
@@ -88,9 +88,6 @@ campusSIRFunction <- function(
       if(partyRateInput > 0){scenariosToRun[scenarioNumber, ]$parties <- TRUE} else {scenariosToRun[scenarioNumber, ]$parties <- FALSE}
       
       testParameters <- parameterSetupFunction(scenarioNumber, scenariosToRun)
-      
-      print(testParameters$timeInvariantParams$avgNonPodContacts)
-      
       
       modelOutputs <- modelRunner(
         initialState = testParameters$stateParams,
