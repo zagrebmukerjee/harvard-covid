@@ -71,7 +71,7 @@ if(nrow(params$diffParamsTables$diffPopsocTable) > 0){
 }
 
 ```
-`r   if(nrow(params$diffParamsTables$diffExtraTable) > 0) {"**Changes in Additional Assumptions**"} else {""}`
+`r   if(nrow(params$diffParamsTables$diffExtraTable) > 0) {"**Changes in Disease Assumptions**"} else {""}`
 ```{r extraTable, echo = FALSE,comment=NA,background=NA}
 if(nrow(params$diffParamsTables$diffExtraTable) > 0){  
   params$diffParamsTables$diffExtraTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%

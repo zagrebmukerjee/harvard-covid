@@ -11,7 +11,7 @@ Cost Per Test ($),testPCRCost,,test,%0.0f$,more,less,%0.0f$,,in PCR test cost,
 Confirmatory Test Cost ($),testConfCost,Currently assuming 100% sens/spec,test,%0.0f$,more,less,%0.0f$,,in confirmatory test cost,
 False Positive Release Time,falsePositiveReturnTime,Days for False Positive to be released,test,%0.0f,more,fewer,%0.0f,,day(s) to screen out false positives,
 Student Population,studentPopulation,,popsoc,%0.0f,more,fewer,%0.0f,,students,
-Average Size of Shared Housing,podSize,Number of Students Living Together,popsoc,%0.0f,more,fewer,%0.0f,,,pod size
+Average Size of Shared Housing,podSize,Number of Students Living Together,popsoc,%0.0f,more,fewer,%0.0f,,,housing group size
 Probability of Roommate Infection,intraPodInfectionProb,Chance one infected pod member infects another,popsoc,%0.1f%%,higher,lower,%0.1f%%,,intra-pod infection risk,
 Frequency of Social Gatherings,partyRate,Days between parties,popsoc,%0.0f,more,fewer,%0.0f,,days between sanctioned parties,
 Number of Students attending Social Gatherings,partySize,Size of parties,popsoc,%0.0f,more,fewer,%0.0f,,students at a party,

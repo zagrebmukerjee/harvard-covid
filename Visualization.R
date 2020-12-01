@@ -36,10 +36,10 @@ ggPlotChartingFunction <- function(chartData, chartDiags, chartParameters, annot
     select(Day = day, 
            Infected = infected,
            Recovered = allRecovered, 
-           `Beds Used` = bedsUsed, 
+           Isolated = bedsUsed, 
            `Total Positive Tests` = testPositivity , 
            `True Positive Tests` = trueTestPositivity) %>% melt(id = "Day")
-  trajDataGG <- chartDataReshape %>%  filter(variable %in% c("Infected", "Recovered", "Beds Used"))
+  trajDataGG <- chartDataReshape %>%  filter(variable %in% c("Infected", "Recovered", "Isolated"))
   posDataGG <- chartDataReshape %>%  filter(variable %in% c("Total Positive Tests", "True Positive Tests"))
   
   trajectoryGGPlot <- ggplot(data = trajDataGG, aes(x = Day, y = value, colour = variable)) + 
@@ -110,7 +110,7 @@ dashboardChartingFunction <- function(chartData, chartParameters, annotations = 
   trajectoryChart <- plot_ly(data = chartData, x = ~day, y = ~infected, name = "Infected (Symp + ASymp)", 
                              type = "scatter", mode = "lines", line = list(color = clrs1[[1]]))  %>%
     add_trace(y = ~allRecovered, name = "Recovered", line = list( color = clrs1[[2]])) %>%
-    add_trace(y = ~bedsUsed, name = "Beds Used", line = list( color = clrs1[[3]])) %>% 
+    add_trace(y = ~bedsUsed, name = "Isolated", line = list( color = clrs1[[3]])) %>% 
     layout(yaxis = list(title = yaxisString, range = yRangeTraj), xaxis = list(title = "Day", range = xRange), legend = list(x = 0, y = 1.2, orientation = 'h'),
            annotations = maxInfAnnotation, font = list(size = 11), showlegend = FALSE) 
   
@@ -267,7 +267,7 @@ formattedParameterTableFunction <- function(rawTableInput, testParameters){
   basicTable <- tableParamsToShow %>%  filter(paramType == "basic") %>%  select(Name, Value, Notes)
   testTable <- tableParamsToShow %>%  filter(paramType == "test") %>% select(Name, Value, Notes)
   popsocTable <- tableParamsToShow %>%  filter(paramType == "popsoc") %>% select(Name, Value, Notes)
-  extraTable <- tableParamsToShow %>%  filter(paramType == "extra") %>% select(Name, Value, Notes)
+  extraTable <- tableParamsToShow %>%  filter(paramType == "disease") %>% select(Name, Value, Notes)
   
   
   return(list(basicTable = basicTable, testTable = testTable, popsocTable = popsocTable, extraTable = extraTable))

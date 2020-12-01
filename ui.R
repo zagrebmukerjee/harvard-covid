@@ -384,7 +384,7 @@ ui <- dashboardPage(
         label = "Average Size of Shared Housing",
         value = 1, 
         min = 1, 
-        max = 15, 
+        max = 25, 
         step = 1
       ),
       bsTooltip(
@@ -395,7 +395,7 @@ ui <- dashboardPage(
       ),
       sliderInput(
         inputId = "podInfectionProbInput", 
-        label = "Probability of Roommate Infection",
+        label = "Probability of Shared Housing Infection",
         value = 15, 
         min = 0, 
         max = 50, 
@@ -404,28 +404,14 @@ ui <- dashboardPage(
       ),
       bsTooltip(
         "podInfectionProbInput", 
-        "Cumulative probability that a sick roommate infects a healthy one",
-        placement = "bottom", 
-        trigger = "hover"
-      ),
-      sliderInput(
-        inputId = "partyRateInput", 
-        label = "Frequency of Social Gatherings",
-        value = 0, 
-        min = 0, 
-        max = 14, 
-        step = 1
-      ),
-      bsTooltip(
-        "partyRateInput", 
-        "0 = no gatherings; 1 = daily gatherings; 2 = gatherings every other day; etc.",
+        "Cumulative additional probability that a sick student infects a healthy one due to sharing living space",
         placement = "bottom", 
         trigger = "hover"
       ),
       sliderInput(
         inputId = "partySizeInput", 
-        label = "Number of Students Attending Social Gatherings",
-        value = 500,
+        label = "Number of Students Attending Social Gatherings per Day (0 Disables)",
+        value = 0,
         min = 0,
         max = 1500
       ),

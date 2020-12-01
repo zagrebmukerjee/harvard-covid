@@ -19,7 +19,7 @@ campusSIRFunction <- function(
     falsePositiveReturnTime,
     podSizeInput,
     podInfectionProbInput,
-    partyRateInput,
+    # partyRateInput,
     partySizeInput,
     partyContactsInput,
     ssDateInput,
@@ -71,7 +71,7 @@ campusSIRFunction <- function(
 
       scenariosToRun[scenarioNumber, ]$podSize <- podSizeInput
       scenariosToRun[scenarioNumber, ]$intraPodInfectionProb <- podInfectionProbInput/100
-      scenariosToRun[scenarioNumber, ]$partyRate <- partyRateInput
+      scenariosToRun[scenarioNumber, ]$partyRate <- 1
       scenariosToRun[scenarioNumber, ]$partySize <- partySizeInput
       scenariosToRun[scenarioNumber, ]$contactsPerParty <- partyContactsInput
       
@@ -85,7 +85,7 @@ campusSIRFunction <- function(
       
       
       
-      if(partyRateInput > 0){scenariosToRun[scenarioNumber, ]$parties <- TRUE} else {scenariosToRun[scenarioNumber, ]$parties <- FALSE}
+      if(partySizeInput > 0){scenariosToRun[scenarioNumber, ]$parties <- TRUE} else {scenariosToRun[scenarioNumber, ]$parties <- FALSE}
       
       testParameters <- parameterSetupFunction(scenarioNumber, scenariosToRun)
       

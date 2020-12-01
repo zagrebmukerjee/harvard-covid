@@ -55,11 +55,11 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   diffTrajectoryChart <- plot_ly(data = diffOutputData, x = ~day, y = ~infected, name = "Infected (Symp + ASymp)", 
                              type = "scatter", mode = "lines", line = list(color = clrs1[[1]]))  %>%
     add_trace(y = ~allRecovered, name = "Recovered", line = list( color = clrs1[[2]])) %>%
-    add_trace(y = ~bedsUsed, name = "Beds Used", line = list( color = clrs1[[3]])) %>% 
+    add_trace(y = ~bedsUsed, name = "Isolated", line = list( color = clrs1[[3]])) %>% 
     layout(yaxis = list(title = yaxisString, range = yRangeTraj), xaxis = list(title = "Day", range = xRange), legend = list(x = 0, y = 1.2, orientation = 'h'),
            font = list(size = 11), showlegend = FALSE) 
   
-  trajLegends <- c("Infected", "Recovered", "Beds Used")
+  trajLegends <- c("Infected", "Recovered", "Isolated")
   n <- length(trajLegends)
   y_annotation <- seq(1, 1-n*.024, length.out = n)
   
@@ -137,10 +137,10 @@ diffVizFunction <- function(controlFile, treatmentFile ){
     select(Day = day, 
            Infected = infected,
            Recovered = allRecovered, 
-           `Beds Used` = bedsUsed, 
+           Isolated = bedsUsed, 
            `Total Positive Tests` = testPositivity , 
            `True Positive Tests` = trueTestPositivity) %>% melt(id = "Day")
-  trajDataGG <- diffChartDataReshape %>%  filter(variable %in% c("Infected", "Recovered", "Beds Used"))
+  trajDataGG <- diffChartDataReshape %>%  filter(variable %in% c("Infected", "Recovered", "Isolated"))
   posDataGG <- diffChartDataReshape %>%  filter(variable %in% c("Total Positive Tests", "True Positive Tests"))
   
   
@@ -209,7 +209,7 @@ diffVizFunction <- function(controlFile, treatmentFile ){
   diffBasicTable <- diffParamsToShow %>%  filter(paramType == "basic")  %>%  select(Name, Value)
   diffTestTable <- diffParamsToShow %>%  filter(paramType == "test") %>% select(Name, Value)
   diffPopsocTable <- diffParamsToShow %>%  filter(paramType == "popsoc") %>% select(Name, Value)
-  diffExtraTable <- diffParamsToShow %>%  filter(paramType == "extra") %>% select(Name, Value)
+  diffExtraTable <- diffParamsToShow %>%  filter(paramType == "disease") %>% select(Name, Value)
   
   diffParamsTables <- list(
     diffBasicTable = diffBasicTable,

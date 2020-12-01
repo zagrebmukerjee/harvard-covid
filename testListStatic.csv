@@ -1,0 +1,5 @@
+TestName,scenario1,scenario2,diffName,explanatoryText,generateDiff,stitch,stitchFileName
+NoParty,NoParty,,NoParty, ,FALSE,FALSE,NonexistentFile
+Party_10_1500,Party_10_1500,,Party_10_1500,,FALSE,FALSE,NonexistentFile
+Party_10_3000,Party_10_3000,,Party_10_3000,,FALSE,FALSE,NonexistentFile
+Party_20_3000,Party_20_3000,,Party_20_3000,,FALSE,FALSE,NonexistentFile

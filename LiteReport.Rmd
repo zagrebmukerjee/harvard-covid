@@ -59,7 +59,7 @@ params$paramTable$popsocTable%>% kable(align = "lcr", row.names = FALSE, col.nam
 
 
 ```
-**More Assumptions**
+**Disease Assumptions**
 ```{r extraTable, echo = FALSE,comment=NA,background=NA}
   
 params$paramTable$extraTable%>% kable(align = "lcr", row.names = FALSE, col.names = NULL, booktabs = TRUE, format = "latex") %>%
@@ -69,7 +69,7 @@ params$paramTable$extraTable%>% kable(align = "lcr", row.names = FALSE, col.name
 ```
   
 
-```{r charts, echo = FALSE, fig.height=3.75}
+```{r charts, echo = FALSE, fig.height=3.5}
 grid.arrange(params$ggCharts$trajectoryGGPlot, params$ggCharts$positivityGGPlot, ncol = 2)
 ```
 

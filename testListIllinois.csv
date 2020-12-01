@@ -1,0 +1,13 @@
+TestName,scenario1,scenario2,diffName,explanatoryText,generateDiff,stitch,stitchFileName
+Illinois_26_0,Illinois_26_0,,Illinois_26_0,,FALSE,FALSE,NonexistentFile
+Illinois_52_0,Illinois_52_0,,Illinois_52_0,,FALSE,FALSE,NonexistentFile
+Illinois_130_0,Illinois_130_0,,Illinois_130_0,,FALSE,FALSE,NonexistentFile
+Illinois_260_0,Illinois_260_0,,Illinois_260_0,,FALSE,FALSE,NonexistentFile
+Illinois_520_0,Illinois_520_0,,Illinois_520_0,,FALSE,FALSE,NonexistentFile
+Illinois_1040_0,Illinois_1040_0,,Illinois_1040_0,,FALSE,FALSE,NonexistentFile
+Illinois_26_0_SS,Illinois_26_0_SS,,Illinois_26_0_SS,,FALSE,FALSE,NonexistentFile
+Illinois_52_0_SS,Illinois_52_0_SS,,Illinois_52_0_SS,,FALSE,FALSE,NonexistentFile
+Illinois_130_0_SS,Illinois_130_0_SS,,Illinois_130_0_SS,,FALSE,FALSE,NonexistentFile
+Illinois_260_0_SS,Illinois_260_0_SS,,Illinois_260_0_SS,,FALSE,FALSE,NonexistentFile
+Illinois_520_0_SS,Illinois_520_0_SS,,Illinois_520_0_SS,,FALSE,FALSE,NonexistentFile
+Illinois_1040_0_SS,Illinois_1040_0_SS,,Illinois_1040_0_SS,,FALSE,FALSE,NonexistentFile
