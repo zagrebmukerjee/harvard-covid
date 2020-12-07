@@ -68,7 +68,7 @@ for(t in 1:nrow(testsToRun)){
     
     #charts <- chartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)
     tables <- tableFunction(tableData = outputData, tableParameters = testParameters, tableDiags = diagnosticNumbers)
-    ggCharts <- ggPlotChartingFunction(chartData = outputData, chartDiags = diagnosticNumbers,  chartParameters = testParameters, annotations = FALSE)
+    ggCharts <- ggPlotChartingFunction(chartData = outputData, chartDiags = diagnosticNumbers,  chartParameters = testParameters, annotations = FALSE, isolations = FALSE)
     
     formattedResultsTable <- formattedResultsTableFunction(tables$keyResults %>%  filter(!(Name %in% c("Accurate Contact Traces", "Total Quarantine Entries")))) 
     chartDisplay <- dashboardChartingFunction(chartData = outputData, chartParameters = testParameters, annotations = TRUE)$dashboard
@@ -131,11 +131,11 @@ allChartsForDisplay <- lapply(allCharts, function(a){
 })
 
 
-allChartsForDisplay[1:2] <- lapply(allChartsForDisplay[1:2], function(a){
+allChartsForDisplay[1:9] <- lapply(allChartsForDisplay[1:9], function(a){
   a + theme(axis.text.x=element_blank())
 })
 
-gl <-  c(allChartsForDisplay, ncol = 2, nrow = 2, bottom = "Days", left = "Number of People")
+gl <-  c(allChartsForDisplay, ncol = 3, nrow = 4, bottom = "Days", left = "Number of People")
 
 
 combined <- arrangeGrob(do.call(arrangeGrob, gl),

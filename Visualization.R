@@ -1,5 +1,5 @@
 
-ggPlotChartingFunction <- function(chartData, chartDiags, chartParameters, annotations = TRUE){
+ggPlotChartingFunction <- function(chartData, chartDiags, chartParameters, annotations = TRUE, isolations = TRUE){
   # chartData <- outputData
   # chartParameters <- testParameters
   # annotations <- TRUE
@@ -41,6 +41,8 @@ ggPlotChartingFunction <- function(chartData, chartDiags, chartParameters, annot
            `True Positive Tests` = trueTestPositivity) %>% melt(id = "Day")
   trajDataGG <- chartDataReshape %>%  filter(variable %in% c("Infected", "Recovered", "Isolated"))
   posDataGG <- chartDataReshape %>%  filter(variable %in% c("Total Positive Tests", "True Positive Tests"))
+  
+  if(!isolations){trajDataGG <- trajDataGG %>% filter(variable %in% c("Infected", "Recovered"))}
   
   trajectoryGGPlot <- ggplot(data = trajDataGG, aes(x = Day, y = value, colour = variable)) + 
     geom_line(size = 1) +
@@ -121,7 +123,7 @@ dashboardChartingFunction <- function(chartData, chartParameters, annotations = 
   # legends and annotations 
   ########################
   
-  trajLegends <- c("Infected", "Recovered", "Beds Used")
+  trajLegends <- c("Infected", "Recovered", "Isolated")
   n <- length(trajLegends)
   y_annotation <- seq(1, 1-n*.024, length.out = n)
   

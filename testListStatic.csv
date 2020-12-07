@@ -1,5 +1,13 @@
 TestName,scenario1,scenario2,diffName,explanatoryText,generateDiff,stitch,stitchFileName
-NoParty,NoParty,,NoParty, ,FALSE,FALSE,NonexistentFile
-Party_10_1500,Party_10_1500,,Party_10_1500,,FALSE,FALSE,NonexistentFile
-Party_10_3000,Party_10_3000,,Party_10_3000,,FALSE,FALSE,NonexistentFile
-Party_20_3000,Party_20_3000,,Party_20_3000,,FALSE,FALSE,NonexistentFile
+1000_2.5_2_SS,1000_2.5_2_SS,,1000_2.5_2_SS, ,FALSE,FALSE,NonexistentFile
+3400_2.5_2_SS,3400_2.5_2_SS,,3400_2.5_2_SS,,FALSE,FALSE,NonexistentFile
+6600_2.5_2_SS,6600_2.5_2_SS,,6600_2.5_2_SS,,FALSE,FALSE,NonexistentFile
+1000_4.0_2_SS,1000_4.0_2_SS,,1000_4.0_2_SS,,FALSE,FALSE,NonexistentFile
+3400_4.0_2_SS,3400_4.0_2_SS,,3400_4.0_2_SS,,FALSE,FALSE,NonexistentFile
+6600_4.0_2_SS,6600_4.0_2_SS,,6600_4.0_2_SS,,FALSE,FALSE,NonexistentFile
+1000_2.5_5_SS,1000_2.5_5_SS,,1000_2.5_5_SS,,FALSE,FALSE,NonexistentFile
+3400_2.5_5_SS,3400_2.5_5_SS,,3400_2.5_5_SS,,FALSE,FALSE,NonexistentFile
+6600_2.5_5_SS,6600_2.5_5_SS,,6600_2.5_5_SS,,FALSE,FALSE,NonexistentFile
+1000_4.0_5_SS,1000_4.0_5_SS,,1000_4.0_5_SS,,FALSE,FALSE,NonexistentFile
+3400_4.0_5_SS,3400_4.0_5_SS,,3400_4.0_5_SS,,FALSE,FALSE,NonexistentFile
+6600_4.0_5_SS,6600_4.0_5_SS,,6600_4.0_5_SS,,FALSE,FALSE,NonexistentFile
