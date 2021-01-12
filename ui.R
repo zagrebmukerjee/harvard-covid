@@ -569,6 +569,15 @@ ui <- dashboardPage(
   
   
   dashboardBody(
+    tags$head(
+      tags$script(
+        src = paste0(
+          "https://cdn.jsdelivr.net/npm/js-cookie@rc/",
+          "dist/js.cookie.min.js"
+        )
+      ),
+      tags$script(src = "www/script.js")
+    ),
     useShinyjs(),
     dashboardTheme,
     tabsetPanel(id = "tabs",

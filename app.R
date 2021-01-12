@@ -34,6 +34,8 @@ source("ParameterSetup.R")
 source("vizFunction.R")
 source("Visualization.R")
 
+# some light JS for cookies
+addResourcePath("www", "www")
 
 server <- function(input, output, session){
    
@@ -50,11 +52,26 @@ server <- function(input, output, session){
    # General stuff
    ###########################################
    
-   observeEvent("", {
-      showModal(modalDialog(
-         includeHTML("introPopup.html"),
-         easyClose = TRUE
-      ))
+   observeEvent(input$init, {
+      #session$sendCustomMessage("cookie-get", "")
+      
+      print("Existing Cookies:")
+      print(input$cookies)
+
+      if(is.null(input$cookies$CovidUVisitedCookie)){
+         showModal(modalDialog(includeHTML("introPopup.html"),
+            easyClose = FALSE
+         ))
+      }
+
+      msg <- list(name = "CovidUVisitedCookie", value = "visited")
+
+      if(is.null(input$cookies$CovidUVisitedCookie))
+         session$sendCustomMessage("cookie-set", msg)
+
+      print("Cookie Saved")
+      
+
    })
 
    onStop(function(){
@@ -74,6 +91,7 @@ server <- function(input, output, session){
       if (file.exists(pdfList$trt)){
          file.remove(pdfList$trt)}
       
+
    })
    
    
@@ -103,33 +121,38 @@ server <- function(input, output, session){
       
    })
    
-   funList <- eventReactive(eventExpr = input$recomputeButton, 
-                            valueExpr = {campusSIRFunction(
-                                  r0 = input$r0,
-                                  testPCRSpecificity = input$spec,
-                                  testPCRSensitivity = input$sens,
-                                  testingTime = input$cad,
-                                  extInf = input$extInf,
-                                  startingAsymptomatics = input$asymp,
-                                  studentPopulation = input$pop,
-                                  conditionalInfectionProb = input$infectprob,
-                                  symptomDevelopmentProportion = input$devsymp,
-                                  testingCost = input$cost,
-                                  testConfCost = input$confcost,
-                                  falsePositiveReturnTime = input$reldays,
-                                  podSizeInput = input$podSizeInput,
-                                  podInfectionProbInput = input$podInfectionProbInput,
-                                  # partyRateInput = input$partyRateInput,
-                                  partySizeInput = input$partySizeInput,
-                                  partyContactsInput = input$partyContactsInput,
-                                  ssDateInput = input$ssDate,
-                                  ssSizeInput = input$ssSize,
-                                  inctime = input$inctime,
-                                  rectime = input$rectime,
-                                  condmort = input$condmort)},
-                            ignoreNULL = FALSE)
-   
-   output$plot <- renderPlotly(
+   funList <- eventReactive(
+      eventExpr = {
+         input$recomputeButton
+         input$init
+      }, 
+      valueExpr = {
+            campusSIRFunction(
+            r0 = input$r0,
+            testPCRSpecificity = input$spec,
+            testPCRSensitivity = input$sens,
+            testingTime = input$cad,
+            extInf = input$extInf,
+            startingAsymptomatics = input$asymp,
+            studentPopulation = input$pop,
+            conditionalInfectionProb = input$infectprob,
+            symptomDevelopmentProportion = input$devsymp,
+            testingCost = input$cost,
+            testConfCost = input$confcost,
+            falsePositiveReturnTime = input$reldays,
+            podSizeInput = input$podSizeInput,
+            podInfectionProbInput = input$podInfectionProbInput,
+            # partyRateInput = input$partyRateInput,
+            partySizeInput = input$partySizeInput,
+            partyContactsInput = input$partyContactsInput,
+            ssDateInput = input$ssDate,
+            ssSizeInput = input$ssSize,
+            inctime = input$inctime,
+            rectime = input$rectime,
+            condmort = input$condmort)},
+      ignoreNULL = TRUE)
+      
+      output$plot <- renderPlotly(
       subplot(funList()$chart, funList()$positivityChart, titleX = TRUE, titleY = TRUE, margin = .05) %>% 
          layout(showlegend = FALSE, title = "Disease Trajectory & Positivity Rate") 
    )
@@ -192,20 +215,27 @@ server <- function(input, output, session){
    
    observeEvent(input$saveControl, {
       
-      if (!dir.exists("savedData/")){dir.create("savedData/")} 
-      
+      if (!dir.exists("savedData/")){dir.create("savedData/")}
+
       fileNameList$ctrl <<- paste0("savedData/", session.id(), "Control.rds" )
-      
+
       saveRDS(object = funList()$outputForDiff, file = fileNameList$ctrl)
+
+      # msg <- list(name = "CovidUVisitedCookie", value = "visited")
+      # 
+      # if(is.null(input$cookies$CovidUVisitedCookie))
+      #    session$sendCustomMessage("cookie-set", msg)
+      # 
+      # print("Cookie Saved")
    })
    
    
    observeEvent(input$saveTreatment, {
       
-      if (!dir.exists("savedData/")){dir.create("savedData/")} 
-      
+      if (!dir.exists("savedData/")){dir.create("savedData/")}
+
       fileNameList$trt <<- paste0("savedData/", session.id(), "Treatment.rds")
-      
+
       saveRDS(object = funList()$outputForDiff, file = fileNameList$trt)
       
    })
@@ -213,14 +243,12 @@ server <- function(input, output, session){
    
    
    observeEvent(input$clearSaves, {
-      # print(fileNameList$ctrl)
-      # print(fileNameList$ctrl)
+      
       if (file.exists(fileNameList$ctrl)){
-         # print("A")
          file.remove(fileNameList$ctrl)}
       if (file.exists(fileNameList$trt)) {
-         # print("B")
-         file.remove(fileNameList$trt)} 
+         file.remove(fileNameList$trt)}
+      
    })
    
    ###########################################
