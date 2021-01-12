@@ -10,3 +10,4 @@ tmp.csv
 packrat/lib*
 packrat/src
 packrat/lib*/
+testApp_Cookies.R
