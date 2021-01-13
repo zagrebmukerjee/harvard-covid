@@ -249,6 +249,12 @@ server <- function(input, output, session){
       if (file.exists(fileNameList$trt)) {
          file.remove(fileNameList$trt)}
       
+      msg <- list(name = "CovidUVisitedCookie", value = "visited")
+      
+      session$sendCustomMessage("cookie-remove", msg)
+      
+      print("Cookie Removed")
+      
    })
    
    ###########################################
