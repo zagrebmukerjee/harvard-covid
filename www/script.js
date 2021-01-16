@@ -8,7 +8,7 @@ function getCookies(){
 Shiny.addCustomMessageHandler('cookie-set', function(msg){
   
   tmp = msg.name + "=" + msg.value
-  tmp += "; max-age=" + (30*24*60*60) + "; " + "path=/;'"+ "domain=projects.iq.harvard.edu;";
+  tmp += "; max-age=" + (30*24*60*60) + "; domain=.harvard.edu;";
   document.cookie = tmp
   
   
