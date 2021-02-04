@@ -48,9 +48,9 @@ campusSIRFunction <- function(
       
       # go from r0 to # contacts
       recoveryRate <- 1/rectime
-      symptomOnsetRate <- recoveryRate*(symptomDevelopmentProportion/(1-symptomDevelopmentProportion))
+      symptomOnsetRate <- recoveryRate*((symptomDevelopmentProportion/100)/(1-(symptomDevelopmentProportion/100)))
       divisor <- recoveryRate + symptomOnsetRate
-      contactInfProb <- conditionalInfectionProb
+      contactInfProb <- conditionalInfectionProb/100
       beta <- r0 * divisor
       avgContacts <- beta/contactInfProb
       
